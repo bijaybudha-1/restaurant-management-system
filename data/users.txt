@@ -1,1 +1,2 @@
-bijay,bijay@123,bijay,customer
+bijay,bijaybudha123@gmail.com,bijay,customer
+dipesh,dipesh123@gmail.com,dipesh,customer
