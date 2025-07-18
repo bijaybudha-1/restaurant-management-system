@@ -6,7 +6,7 @@ from modules.customer import customer_interface
 from modules.chef import chef_interface
 from modules.manager import manager_interface
 
-FILE_NAME = 'data/users.txt'
+USER_FILE = 'data/users.txt'
 
 def registration():
     print("═" * 50)
@@ -17,13 +17,13 @@ def registration():
     password = input("Enter your password: ")
     user_role = "customer"
 
-    if os.path.exists(FILE_NAME):
-        with open(FILE_NAME, "r") as file:
+    if os.path.exists(USER_FILE):
+        with open(USER_FILE, "r") as file:
             for line in file:
                 if line.strip().split(",")[0] == username:
                     print(f"{username} is already registered.")
                     return
-    with open(FILE_NAME, "a") as file:
+    with open(USER_FILE, "a") as file:
         file.write(f"{username},{email},{password},{user_role}\n")
     print("Registration successful.")
     login()
@@ -38,11 +38,11 @@ def login():
     user_role = input("Enter your role: ")
     message = "Login successful."
     attempt = 3
-    if not os.path.exists(FILE_NAME):
+    if not os.path.exists(USER_FILE):
         print("User doesn't exist.")
         return
 
-    with open(FILE_NAME, "r") as file:
+    with open(USER_FILE, "r") as file:
         for each_file_line in file:
             stored_username, stored_email, stored_password, stored_user_role = each_file_line.strip().split(",")
             if username_email ==  stored_email or username_email == stored_username:
@@ -90,9 +90,9 @@ def reset_password(stored_email):
 
 def email_checker(stored_email):
     print("\n" + "═" * 50)
-    print("📧 Email Verification".center(50).upper())
+    print("Email Verification".center(50).upper())
     print("═" * 50)
-    email = input("📧 Enter your email: ")
+    email = input("Enter your email: ")
     attempt = 3
     while attempt > 0:
         if email == stored_email:
@@ -102,7 +102,7 @@ def email_checker(stored_email):
             attempt -= 1
             if attempt > 0:
                 print(f"Incorrect email. Attempts left: {attempt}")
-                email = input("📧 Enter your email: ")
+                email = input("Enter your email: ")
             else:
                 print("─" * 50)
                 print("You have entered wrong email 3 times. Access denied.")
@@ -120,13 +120,13 @@ def otp_generator(email):
 
 def otp_checker(otp, entered_otp, email):
     print("\n" + "═" * 50)
-    print(f"🔐 OTP Checker".center(50))
+    print(f"OTP Checker".center(50))
     print("═" * 50)
     if str(otp) == entered_otp:
-        print(f"✅  Your OTP code is correct.".center(50))
+        print(f"Your OTP code is correct.".center(50))
         password_reset(email)
     else:
-        print(f"❌ Your OTP code is incorrect.")
+        print(f"Your OTP code is incorrect.")
         print("─" * 50)
 
 def password_reset(email):
@@ -134,21 +134,21 @@ def password_reset(email):
     print("RESET YOUR PASSWORD".center(50))
     print("═" * 50)
 
-    new_password = input("🔐 Enter your new password: ").strip()
-    confirm_password = input("🔐 Confirm your new password: ").strip()
+    new_password = input("Enter your new password: ").strip()
+    confirm_password = input("Confirm your new password: ").strip()
 
     if new_password != confirm_password:
-        print("❌ Passwords do not match. Please try again.")
+        print("Passwords do not match. Please try again.")
         return
 
-    if not os.path.exists(FILE_NAME):
-        print("⚠️  User file not found.")
+    if not os.path.exists(USER_FILE):
+        print("User file not found.")
         return
 
     updated_lines = []
     user_found = False
 
-    with open(FILE_NAME, "r") as file:
+    with open(USER_FILE, "r") as file:
         for line in file:
             stored_username, stored_email, password, stored_role = line.strip().split(",")
 
@@ -162,11 +162,11 @@ def password_reset(email):
 
     print("\n" + "═" * 50)
     if user_found:
-        with open(FILE_NAME, "w") as file:
+        with open(USER_FILE, "w") as file:
             file.writelines(updated_lines)
-        print("✅ Password updated successfully.")
+        print("Password updated successfully.")
     else:
-        print("❌ Username not found.")
+        print("Username not found.")
     print("═" * 50 + "\n")
 
 def auth_interface():
