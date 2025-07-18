@@ -1,7 +1,7 @@
 import os
 from random import randint
 
-from modules.admin import admin_interface
+from modules.admin import greeting_interface
 from modules.customer import customer_interface
 from modules.chef import chef_interface
 from modules.manager import manager_interface
@@ -50,7 +50,7 @@ def login():
                     if password == stored_password:
                         if stored_user_role == user_role == "admin":
                             print(f"{message}")
-                            admin_interface(stored_username)
+                            greeting_interface(stored_username)
                             return
                         elif stored_user_role == user_role == "manager":
                             print(f"{message}")

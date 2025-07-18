@@ -1,4 +1,1 @@
-bijay,bijay123@gmail.com,bijay,customer
-dipesh,dipesh123@gmail.com,dipesh,customer
-riyansh,riyansh@123,riyansh,customer
-sushil kunwar,sushijungkunwar123@gmail.com,sushil,customer
+bijay,bijay123@gmail.com,bijay,admin

@@ -1,0 +1,5 @@
+momo, 100
+chaumin, 200
+burger, 180
+roll,120
+veg-momo,120
