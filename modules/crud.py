@@ -49,7 +49,7 @@ def view_staff():
             manage_staff()
         case 2:
             print("\n" + "═" * 50)
-            admin_interface()
+            admin_interface(None)
 
 # Update Profile
 def update_profile(verify_username):
@@ -93,3 +93,52 @@ def update_profile(verify_username):
 
 
 # Update User Profile
+def update_user_profile():
+    from modules.admin import manage_staff, admin_interface
+    print("\n" + "═" * 60)
+    print("USER PROFILE UPDATE".center(60))
+    print("═" * 60)
+    username_to_update = input("Enter the updated username for the staff member: ").strip()
+
+    if not os.path.exists(USER_FILE):
+        print("User file not found.".center(50))
+        return
+
+    updated_lines = []
+    user_found = False
+
+    with open(USER_FILE, "r") as file:
+        for line in file:
+            username, email, password, role = line.strip().split(",")
+
+            if username == username_to_update:
+                print(f"User '{username}' found. Leave blank to keep current value.")
+                print("─" * 60)
+
+                new_username = input(f"Enter your new username: ").strip() or username
+                new_email = input(f"Enter your new email: ").strip() or email
+                new_role = input(f"Enter your new role: ").strip() or role
+
+                updated_line = f"{new_username},{new_email},{password},{new_role}\n"
+                updated_lines.append(updated_line)
+                user_found = True
+            else:
+                updated_lines.append(line)
+
+    print("\n" + "═" * 50)
+    if user_found:
+        with open(USER_FILE, "w") as file:
+            file.writelines(updated_lines)
+        print("Profile updated successfully.".capitalize().center(50))
+        print("1. Back to Manage Staff Interface")
+        print("2. Back to Admin Panel")
+        choose_option = int(input("Enter your choice: "))
+        match choose_option:
+            case 1:
+                manage_staff()
+            case 2:
+                admin_interface(None)
+
+    else:
+        print("Username not found.")
+    print("═" * 50 + "\n")

@@ -3,8 +3,6 @@ from modules.menu import view_order_menu
 FILE_USER = 'data/users.txt'
 FILE_MENU = 'data/menu.txt'
 
-def update_profile():
-    print('Updating profile')
 
 def send_feedback():
     print("\n" + "═" * 50)
@@ -28,6 +26,6 @@ def customer_interface(username):
         case 2:
             send_feedback()
         case 3:
-            update_profile()
+            ""
         case 4:
             exit()

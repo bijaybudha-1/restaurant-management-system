@@ -1,8 +1,6 @@
-from modules.crud import add_user, view_staff
-# from modules.customer import update_profile
+from modules.crud import add_user, view_staff, update_profile, update_user_profile
 
 USER_FILE = 'data/users.txt'
-
 
 def manage_staff():
     print("\n" + "═" * 50)
@@ -20,11 +18,12 @@ def manage_staff():
         case 2:
             view_staff()
         case 3:
-            "update_user_profile()"
+            update_user_profile()
         case 4:
             print("Delete Staff")
         case 5:
-            admin_interface()
+            print("\n" + "═" * 50)
+            admin_interface(None)
 
 
 def view_sales_report():
@@ -36,17 +35,18 @@ def view_feedback():
 def greeting_interface(username):
     print("\n" + "═" * 50)
     print(f"{username.upper()}, Welcome to the Restaurant Management System ".center(50))
-    admin_interface()
-    return username
+    admin_interface(username)
 
-def admin_interface():
+
+def admin_interface(username):
+    from modules.auth import auth_interface
     print("Admin Panel ".center(50))
     print("═" * 50)
     print("1. Manage Staff")
     print("2. View Sales Report")
     print("3. View Feedback")
     print("4. Update Profile")
-    print("5. Exit")
+    print("5. Log out (Exit)")
     admin_choose = int(input("Choose an option: "))
     match admin_choose:
         case 1:
@@ -56,6 +56,6 @@ def admin_interface():
         case 3:
             view_feedback()
         case 4:
-            "update_profile()"
+            update_profile(username)
         case 5:
-            exit()
+            auth_interface()
