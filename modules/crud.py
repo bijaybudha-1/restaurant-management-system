@@ -142,3 +142,53 @@ def update_user_profile():
     else:
         print("Username not found.")
     print("═" * 50 + "\n")
+
+# Delete User Profile
+def delete_user_profile():
+    from modules.admin import manage_staff, admin_interface
+    print("\n" + "═" * 50)
+    print("Delete Staff Profile".center(50))
+    print("═" * 50)
+    removed_username = input("Enter the username to remove: ").strip()
+
+    try:
+        with open(USER_FILE, "r") as file:
+            lines = file.readlines()
+
+        user_found = False
+        deleted = False
+
+        with open(USER_FILE, "w") as file:
+            for line in lines:
+                username, email, password, role = line.strip().split(",")
+
+                if username == removed_username:
+                    user_found = True
+                    if role.lower() in ["manager", "chef"]:
+                        deleted = True
+                        continue  # Skip writing this line to delete
+                    else:
+                        print(f"Admin can only remove the data of users whose role is chef or manager")
+                        file.write(line)
+                else:
+                    file.write(line)
+
+        if not user_found:
+            print("Username not found.")
+        elif deleted:
+            print(f"User '{removed_username}' has been deleted successfully.")
+
+        try:
+            choose_option = int(input("Choice a number 1 or 2: "))
+            match choose_option:
+                case 1:
+                    manage_staff()
+                case 2:
+                    admin_interface(None)
+
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+
+    except FileNotFoundError:
+        print("Error: User file not found.")

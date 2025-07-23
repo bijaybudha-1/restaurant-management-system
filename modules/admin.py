@@ -1,4 +1,4 @@
-from modules.crud import add_user, view_staff, update_profile, update_user_profile
+from modules.crud import add_user, view_staff, update_profile, update_user_profile, delete_user_profile
 
 USER_FILE = 'data/users.txt'
 
@@ -20,7 +20,7 @@ def manage_staff():
         case 3:
             update_user_profile()
         case 4:
-            print("Delete Staff")
+            delete_user_profile()
         case 5:
             print("\n" + "═" * 50)
             admin_interface(None)
