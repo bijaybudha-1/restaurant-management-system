@@ -1,29 +1,25 @@
-import os
+
+from modules.crud import update_profile
 
 FILE_NAME = 'data/users.txt'
 MENU_FILE = 'data/menu.txt'
 
-def add_food():
-    print("\n" + "═" * 50)
-    print("Add New Food".center(50))
-    print("═" * 50)
-    food_name = input("Enter food item name: ")
-    price = input("Enter food price: ")
-
-    if os.path.exists(MENU_FILE):
-        with open(MENU_FILE, "r") as file:
-            for line in file:
-                if line.strip().split(",")[0] == food_name:
-                    print(f"{food_name} is already Added.")
-                    return
-
-    with open(MENU_FILE, "a") as file:
-        file.write(f"{food_name},{price}\n")
-    print("Added new food successfully.")
-
-    # update_profile()
-
-
 def chef_interface(username):
     print(f"{username.capitalize()}, Welcome to the Restaurant Management System!")
-    add_food()
+    chef_menu()
+
+def chef_menu():
+    print("\n" + "═" * 50)
+    print("Chef Menu".center(50))
+    print("═" * 50)
+    print("1. View Order")
+    print("2. Update Orders Status")
+    print("3. Update Profile")
+    choose_number = int(input("Enter your choice: "))
+    match choose_number:
+        case "1":
+            print("view Orders")
+        case "2":
+            print("Update Orders Status")
+        case "3":
+            update_profile(None)
