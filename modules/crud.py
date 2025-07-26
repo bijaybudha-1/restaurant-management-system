@@ -219,6 +219,7 @@ def view_chef_customer(stored_username):
         case 1:
             manage_customer(stored_username)
         case 2:
+            print("═" * 50)
             manager_panel(stored_username)
 
 # Adding New Customer
