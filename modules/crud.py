@@ -1,5 +1,6 @@
 import os
 
+
 USER_FILE = 'data/users.txt'
 
 # Add User
@@ -192,3 +193,29 @@ def delete_user_profile():
 
     except FileNotFoundError:
         print("Error: User file not found.")
+
+# Manager Crud Operation
+
+# View Chef and Customer List
+def view_chef_customer(stored_username):
+    from modules.manager import manage_customer, manager_panel
+    print("\n" + "═" * 50)
+    print("view all chef".upper().center(50))
+    print("═" * 50)
+    user_number = 1
+    file = open(USER_FILE, 'r')
+    for line in file:
+        username, email, password, role = line.strip().split(",")
+        if role in ("chef", "customer"):
+            print(f"{user_number}. Username: {username}, Email: {email} User Role: {role}")
+            user_number += 1
+
+    print("\n" + "═" * 50)
+    print("1. Manage Chef or Customer Panel")
+    print("2. Back to Manager Main Panel")
+    choose_option = int(input("Enter your choice: "))
+    match choose_option:
+        case 1:
+            manage_customer(stored_username)
+        case 2:
+            manager_panel(stored_username)
