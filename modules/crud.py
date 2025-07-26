@@ -3,8 +3,8 @@ import os
 
 USER_FILE = 'data/users.txt'
 
-# Add User
-def add_user():
+# Admin Add User
+def admin_add_user(stored_username):
     from modules.admin import manage_staff
     print("═" * 50)
     print("add new staff".center(50).upper())
@@ -25,10 +25,10 @@ def add_user():
         print("Added new user successfully.")
     except Exception as error:
         print(error)
-    manage_staff()
+    manage_staff(stored_username)
 
 # View Staff
-def view_staff():
+def view_staff(stored_username):
     from modules.admin import manage_staff, admin_interface
     print("\n" + "═" * 50)
     print("view all staff".upper().center(50))
@@ -47,10 +47,10 @@ def view_staff():
     choose_option = int(input("Enter your choice: "))
     match choose_option:
         case 1:
-            manage_staff()
+            manage_staff(stored_username)
         case 2:
             print("\n" + "═" * 50)
-            admin_interface(None)
+            admin_interface(stored_username)
 
 # Update Profile
 def update_profile(verify_username):
@@ -94,7 +94,7 @@ def update_profile(verify_username):
 
 
 # Update User Profile
-def update_user_profile():
+def update_user_profile(stored_username):
     from modules.admin import manage_staff, admin_interface
     print("\n" + "═" * 60)
     print("USER PROFILE UPDATE".center(60))
@@ -131,15 +131,16 @@ def update_user_profile():
         with open(USER_FILE, "w") as file:
             file.writelines(updated_lines)
         print("Profile updated successfully.".capitalize().center(50))
+        print("═" * 50)
         print("1. Back to Manage Staff Interface")
         print("2. Back to Admin Panel")
         choose_option = int(input("Enter your choice: "))
         match choose_option:
             case 1:
-                manage_staff()
+                manage_staff(stored_username)
             case 2:
-                admin_interface(None)
-
+                print("═" * 50)
+                admin_interface(stored_username)
     else:
         print("Username not found.")
     print("═" * 50 + "\n")
@@ -183,7 +184,7 @@ def delete_user_profile():
             choose_option = int(input("Choice a number 1 or 2: "))
             match choose_option:
                 case 1:
-                    manage_staff()
+                    manage_staff(None)
                 case 2:
                     admin_interface(None)
 
@@ -200,18 +201,18 @@ def delete_user_profile():
 def view_chef_customer(stored_username):
     from modules.manager import manage_customer, manager_panel
     print("\n" + "═" * 50)
-    print("view all chef".upper().center(50))
+    print("view all customer".upper().center(50))
     print("═" * 50)
     user_number = 1
     file = open(USER_FILE, 'r')
     for line in file:
         username, email, password, role = line.strip().split(",")
-        if role in ("chef", "customer"):
+        if role in "customer":
             print(f"{user_number}. Username: {username}, Email: {email} User Role: {role}")
             user_number += 1
 
     print("\n" + "═" * 50)
-    print("1. Manage Chef or Customer Panel")
+    print("1. Manage Customer Panel")
     print("2. Back to Manager Main Panel")
     choose_option = int(input("Enter your choice: "))
     match choose_option:
@@ -219,3 +220,80 @@ def view_chef_customer(stored_username):
             manage_customer(stored_username)
         case 2:
             manager_panel(stored_username)
+
+# Adding New Customer
+def add_customer(stored_username):
+    from modules.manager import manage_customer
+    print("═" * 50)
+    print("add new customer".center(50).upper())
+    print("═" * 50)
+    try:
+        username = input("Enter your username: ")
+        email = input("Enter your email: ")
+        password = f"{username}@123"
+        user_role = "customer"
+        if os.path.exists(USER_FILE):
+            with open(USER_FILE, "r") as file:
+                for line in file:
+                    if line.strip().split(",")[0] == username:
+                        raise Exception(f"'{username}' is already added.")
+
+        with open(USER_FILE, "a") as file:
+            file.write(f"{username},{email},{password},{user_role}\n")
+        print("Added new user successfully.")
+    except Exception as error:
+        print(error)
+    manage_customer(stored_username)
+
+# Update Customer Profile
+def update_customer_profile(stored_username):
+    from modules.manager import manage_customer
+    import os
+
+    print("\n" + "═" * 60)
+    print("CUSTOMER PROFILE UPDATE".center(60))
+    print("═" * 60)
+    username_to_update = input("Enter the username of the customer to update: ").strip()
+
+    if not os.path.exists(USER_FILE):
+        print("User file not found.".center(50))
+        return
+
+    updated_lines = []
+    user_found = False
+
+    with open(USER_FILE, "r") as file:
+        for line in file:
+            username, email, password, role = line.strip().split(",")
+
+            if username == username_to_update:
+                user_found = True
+                if role.strip().lower() != "customer":
+                    print("\n" + "═" * 70)
+                    print(f"Permission denied: You can only update users with role 'customer'.".center(70))
+                    print("═" * 70 + "\n")
+                    updated_lines.append(line)
+                    continue
+
+                print(f"User '{username}' found. Leave blank to keep current value.")
+                print("─" * 60)
+
+                new_username = input("Enter new username: ").strip() or username
+                new_email = input("Enter new email: ").strip() or email
+                new_role = role  # Managers cannot change the role itself
+
+                updated_line = f"{new_username},{new_email},{password},{new_role}\n"
+                updated_lines.append(updated_line)
+                print("\n" + "═" * 50)
+                print("Profile updated successfully.".center(50))
+                print("═" * 50)
+            else:
+                updated_lines.append(line)
+
+    if user_found:
+        with open(USER_FILE, "w") as file:
+            file.writelines(updated_lines)
+    else:
+        print("Username not found.".center(50))
+
+    manage_customer(stored_username)
