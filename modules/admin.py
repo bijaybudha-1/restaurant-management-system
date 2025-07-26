@@ -1,8 +1,8 @@
-from modules.crud import add_user, view_staff, update_profile, update_user_profile, delete_user_profile
+from modules.crud import admin_add_user, view_staff, update_profile, update_user_profile, delete_user_profile
 
 USER_FILE = 'data/users.txt'
 
-def manage_staff():
+def manage_staff(username):
     print("\n" + "═" * 50)
     print("Manage Staff Interface".center(50))
     print("═" * 50)
@@ -14,16 +14,16 @@ def manage_staff():
     admin_choose = int(input("choose a option: "))
     match admin_choose:
         case 1:
-            add_user()
+            admin_add_user(username)
         case 2:
-            view_staff()
+            view_staff(username)
         case 3:
-            update_user_profile()
+            update_user_profile(username)
         case 4:
             delete_user_profile()
         case 5:
             print("\n" + "═" * 50)
-            admin_interface(None)
+            admin_interface(username)
 
 
 def view_sales_report():
@@ -50,12 +50,13 @@ def admin_interface(username):
     admin_choose = int(input("Choose an option: "))
     match admin_choose:
         case 1:
-            manage_staff()
+            manage_staff(username)
         case 2:
             view_sales_report()
         case 3:
             view_feedback()
         case 4:
             update_profile(username)
+
         case 5:
             auth_interface()
