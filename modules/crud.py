@@ -1,6 +1,5 @@
 import os
 
-
 USER_FILE = 'data/users.txt'
 
 # Admin Add User
@@ -298,3 +297,63 @@ def update_customer_profile(stored_username):
         print("Username not found.".center(50))
 
     manage_customer(stored_username)
+
+# Delete Customer Profile
+def delete_customer(stored_username):
+    from modules.manager import manage_customer, manager_panel
+
+    print("\n" + "═" * 50)
+    print("Delete Customer Profile".center(50))
+    print("═" * 50)
+    removed_username = input("Enter the username to remove: ").strip()
+
+    try:
+        with open(USER_FILE, "r") as file:
+            lines = file.readlines()
+
+        user_found = False
+        deleted = False
+
+        with open(USER_FILE, "w") as file:
+            for line in lines:
+                username, email, password, role = line.strip().split(",")
+
+                if username == removed_username:
+                    user_found = True
+                    if role.lower() in "customer":
+                        deleted = True
+                        continue  # Skip writing this line to delete
+                    else:
+                        print("\n" + "═" * 80)
+                        print(f"Admin can only remove the data of users whose role is chef or manager".center(80))
+                        print("═" * 80)
+                        file.write(line)
+                else:
+                    file.write(line)
+
+        if not user_found:
+            print("\n" + "═" * 50)
+            print("Username not found.".center(50))
+            print("═" * 50)
+        elif deleted:
+            print("\n" + "═" * 50)
+            print(f"User '{removed_username}' has been deleted successfully.".center(50))
+            print("═" * 50)
+
+        try:
+
+            print("1. Back to Customer Panel")
+            print("2. Back to Manager Main Panel")
+            choose_option = int(input("Choice a number 1 or 2: "))
+            match choose_option:
+                case 1:
+                    manage_customer(stored_username)
+                case 2:
+                    manager_panel(stored_username)
+
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+
+    except FileNotFoundError:
+        print("Error: User file not found.")
