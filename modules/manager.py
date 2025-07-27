@@ -1,8 +1,5 @@
-import os
 
-from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer
-
-MENU_FILE = 'data/menu.txt'
+from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer, add_food
 
 def manage_customer(username):
     print("\n" + "═" * 50)
@@ -51,27 +48,30 @@ def manager_panel(username):
         case 1:
             manage_customer(username)
         case 2:
-            print("Manage Menu")
+            manage_menu()
         case 3:
             manager_update_profile(username)
         case 4:
             auth_interface()
 
-def add_food():
+# Manage Menu
+def manage_menu():
     print("\n" + "═" * 50)
-    print("Add New Food".center(50))
+    print("Manage Menu".center(50))
     print("═" * 50)
-    food_name = input("Enter food item name: ")
-    price = input("Enter food price: ")
-
-    if os.path.exists(MENU_FILE):
-        with open(MENU_FILE, "r") as file:
-            for line in file:
-                if line.strip().split(",")[0] == food_name:
-                    print(f"{food_name} is already Added.")
-                    return
-
-    with open(MENU_FILE, "a") as file:
-        file.write(f"{food_name},{price}\n")
-    print("Added new food successfully.")
-
+    print("1. Add Food")
+    print("2. View Food")
+    print("3. Update Food")
+    print("4. Delete Food")
+    choose_number = int(input("Choose an option: "))
+    match choose_number:
+        case 1:
+            add_food()
+        case 2:
+            print("View Food")
+        case 3:
+            print("Update Food")
+        case 4:
+            print("Delete Food")
+        case 5:
+            print("Back to Menu")
