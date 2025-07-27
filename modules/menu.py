@@ -1,4 +1,5 @@
 import os
+
 MENU_FILE = 'data/menu.txt'
 
 def view_order_menu():
@@ -32,7 +33,8 @@ def pay_order():
 def view_order_status():
     print("View Order Status")
 
-def manage_menu():
+def manage_menu(username):
+    from modules.manager import manager_panel
     print("\n" + "═" * 60)
     print("Manage Menu".center(60))
     print("═" * 60)
@@ -40,7 +42,7 @@ def manage_menu():
     print("2. View Food")
     print("3. Update Food")
     print("4. Delete Food")
-    print("5. Back to Manage Menu")
+    print("5. Back to Manager Main Panel")
     choose_number = int(input("Choose an option: "))
     match choose_number:
         case 1:
@@ -52,13 +54,14 @@ def manage_menu():
         case 4:
             delete_item()
         case 5:
-            manage_menu()
+            print("\n" + "═" * 50)
+            manager_panel(username)
 
 # Add New Food Item
 def add_item():
-    print("\n" + "═" * 50)
-    print("Add New Food".center(50))
-    print("═" * 50)
+    print("\n" + "═" * 60)
+    print("Add New Food".center(60))
+    print("═" * 60)
 
     # Input Item name
     while True:
@@ -73,8 +76,10 @@ def add_item():
         with open(MENU_FILE, "r") as file:
             for line in file:
                 if line.strip().split(",")[0] == item_name:
+                    print("\n" + "-" * 60)
                     print(f"'{item_name}' is already added.")
-                    manage_menu()
+                    print("-" * 60)
+                    manage_menu(None)
                     return
 
     # Input Item Category
@@ -105,20 +110,24 @@ def add_item():
         try:
             price = float(price_input)
             if price <= 0:
-                print("Price must be a positive number.")
+                print("\n" + "-" * 60)
+                print("Price must be a positive number.".center(60))
+                print("-" * 60)
             else:
                 break
         except ValueError:
-            print("Invalid price format. Please enter a valid number.")
+            print("\n" + "-" * 60)
+            print("Invalid price format. Please enter a valid number.".center(60))
+            print("-" * 60)
 
     # Save the new item to the file
     with open(MENU_FILE, "a") as file:
         file.write(f"{item_name},{category},{unit},{price:.2f}\n")
 
-    print("\n" + "═" * 50)
-    print("Added new food successfully.".center(50))
-    print("═" * 50)
-    manage_menu()
+    print("\n" + "-" * 60)
+    print("Added new food successfully.".center(60))
+    print("-" * 60)
+    manage_menu(None)
 
 # View All Items
 def view_all_items():
@@ -131,7 +140,7 @@ def view_all_items():
             lines = file.readlines()
             if not lines:
                 print("No food items found.")
-                manage_menu()
+                manage_menu(None)
                 return
             else:
                 print(f"{'Item Name':<20} {'Category':<15} {'Unit':<10} {'Price':<10}")
@@ -141,19 +150,21 @@ def view_all_items():
                     print(f"{item_name:<20} {category:<15} {unit:<10} {price:<10}")
     else:
         print("Menu file does not exist.")
-    manage_menu()
+    manage_menu(None)
 
 # Update Item function
 def update_item():
-    print("\n" + "═" * 50)
-    print("Update Food Item".center(50))
-    print("═" * 50)
+    print("\n" + "═" * 60)
+    print("Update Food Item".center(60))
+    print("═" * 60)
 
     search_name = input("Enter the item name to update: ").strip().lower()
 
     if not os.path.exists(MENU_FILE):
+        print("\n" + "-" * 60)
         print("Menu file not found.")
-        manage_menu()
+        print("-" * 60)
+        manage_menu(None)
         return
 
     with open(MENU_FILE, "r") as file:
@@ -185,13 +196,13 @@ def update_item():
         print("\n" + "-" * 60)
         print("Item not found.".center(60))
         print("-" * 60)
-    manage_menu()
+    manage_menu(None)
 
 # Delete Item
 def delete_item():
-    print("\n" + "═" * 50)
-    print("Delete Food Item".center(50))
-    print("═" * 50)
+    print("\n" + "═" * 60)
+    print("Delete Food Item".center(60))
+    print("═" * 60)
 
     item_to_delete = input("Enter the item name you want to delete: ").strip().lower()
 
@@ -199,7 +210,7 @@ def delete_item():
         print("\n" + "-" * 60)
         print("Menu file not found.".center(60))
         print("-" * 60)
-        manage_menu()
+        manage_menu(None)
         return
 
     with open(MENU_FILE, "r") as file:
@@ -224,4 +235,4 @@ def delete_item():
         print("\n" + "-" * 60)
         print(f"Item '{item_to_delete.capitalize()}' not found.".center(60))
         print("-" * 60)
-    manage_menu()
+    manage_menu(None)
