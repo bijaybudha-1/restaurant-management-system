@@ -49,7 +49,7 @@ def manager_panel(username):
         case 1:
             manage_customer(username)
         case 2:
-            manage_menu()
+            manage_menu(username)
         case 3:
             manager_update_profile(username)
         case 4:

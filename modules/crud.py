@@ -78,7 +78,7 @@ def update_profile(verify_username):
             if username == verify_username:
                 print("\n" + "-" * 50)
                 print(f"User '{username}' found. Leave blank to keep current value.".center(50))
-                print("─" * 50)
+                print("-" * 50)
 
                 new_username = input(f"Enter your new username: ").strip() or username
                 new_email = input(f"Enter your new email: ").strip() or email
