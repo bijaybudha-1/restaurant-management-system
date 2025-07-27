@@ -361,8 +361,8 @@ def delete_customer(stored_username):
         print("Error: User file not found.")
 
 # Manage Menu Crud Operation
-def add_food(username):
-    from modules.manager import manager_panel
+def add_food():
+    from modules.manager import manage_menu
 
     print("\n" + "═" * 50)
     print("Add New Food".center(50))
@@ -378,7 +378,7 @@ def add_food(username):
 
     # Input Item Category
     while True:
-        category = input("Enter a item category(e.g.,\nVegetarian, Non-Vegetarian, Dessert, Beverages): ").strip().lower()
+        category = input("Enter a item category(e.g.,\nVeg, Non-Veg, Dessert, Beverages): ").strip().lower()
         if not category:
             print("Field is empty. Please enter a item category.")
         else:
@@ -414,6 +414,6 @@ def add_food(username):
     with open(MENU_FILE, "a") as file:
         file.write(f"{item_name},{category},{unit},{price}\n")
     print("\n" + "═" * 50)
-    print("Added new food successfully.")
+    print("Added new food successfully.".center(50))
     print("═" * 50)
-    manager_panel(username)
+    manage_menu()
