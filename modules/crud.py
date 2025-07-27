@@ -197,7 +197,7 @@ def delete_user_profile():
 # Manager Crud Operation
 
 # View Chef and Customer List
-def view_chef_customer(stored_username):
+def view_customer(stored_username):
     from modules.manager import manage_customer, manager_panel
     print("\n" + "═" * 50)
     print("view all customer".upper().center(50))
@@ -349,6 +349,7 @@ def delete_customer(stored_username):
                 case 1:
                     manage_customer(stored_username)
                 case 2:
+                    print("\n" + "═" * 50)
                     manager_panel(stored_username)
 
         except ValueError:

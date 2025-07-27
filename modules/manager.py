@@ -1,6 +1,6 @@
 import os
 
-from modules.crud import update_profile, view_chef_customer, add_customer, update_customer_profile
+from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer
 
 MENU_FILE = 'data/menu.txt'
 
@@ -18,13 +18,13 @@ def manage_customer(username):
         case 1:
             add_customer(username)
         case 2:
-            view_chef_customer(username)
+            view_customer(username)
         case 3:
             update_customer_profile(username)
         case 4:
-            print("Delete Customer")
+            delete_customer(username)
         case 5:
-            print("═" * 50)
+            print("\n" + "═" * 50)
             manager_panel(username)
 
 
