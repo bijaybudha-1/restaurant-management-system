@@ -1,5 +1,7 @@
 
-from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer, add_food
+from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer
+from modules.menu import manage_menu
+
 
 def manage_customer(username):
     print("\n" + "═" * 50)
@@ -23,7 +25,6 @@ def manage_customer(username):
         case 5:
             print("\n" + "═" * 50)
             manager_panel(username)
-
 
 def manager_update_profile(username):
     update_profile(username)
@@ -53,25 +54,3 @@ def manager_panel(username):
             manager_update_profile(username)
         case 4:
             auth_interface()
-
-# Manage Menu
-def manage_menu():
-    print("\n" + "═" * 50)
-    print("Manage Menu".center(50))
-    print("═" * 50)
-    print("1. Add Food")
-    print("2. View Food")
-    print("3. Update Food")
-    print("4. Delete Food")
-    choose_number = int(input("Choose an option: "))
-    match choose_number:
-        case 1:
-            add_food()
-        case 2:
-            print("View Food")
-        case 3:
-            print("Update Food")
-        case 4:
-            print("Delete Food")
-        case 5:
-            print("Back to Menu")
