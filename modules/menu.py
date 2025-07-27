@@ -40,6 +40,7 @@ def manage_menu():
     print("2. View Food")
     print("3. Update Food")
     print("4. Delete Food")
+    print("5. Back to Manage Menu")
     choose_number = int(input("Choose an option: "))
     match choose_number:
         case 1:
@@ -47,7 +48,7 @@ def manage_menu():
         case 2:
             view_all_items()
         case 3:
-            print("Update Food")
+            update_item()
         case 4:
             print("Delete Food")
         case 5:
@@ -119,7 +120,7 @@ def add_item():
     print("═" * 50)
     manage_menu()
 
-#
+# View All Items
 def view_all_items():
     print("\n" + "═" * 60)
     print("View All Food Items".center(60))
@@ -140,4 +141,48 @@ def view_all_items():
                     print(f"{item_name:<20} {category:<15} {unit:<10} {price:<10}")
     else:
         print("Menu file does not exist.")
+    manage_menu()
+
+# Update Item function
+def update_item():
+    print("\n" + "═" * 50)
+    print("Update Food Item".center(50))
+    print("═" * 50)
+
+    search_name = input("Enter the item name to update: ").strip().lower()
+
+    if not os.path.exists(MENU_FILE):
+        print("Menu file not found.")
+        manage_menu()
+        return
+
+    with open(MENU_FILE, "r") as file:
+        lines = file.readlines()
+
+    updated = False
+    for i in range(len(lines)):
+        item = lines[i].strip().split(",")
+        if item[0].lower() == search_name:
+            print(f"Found item name: {item[0].strip().title()}")
+
+            new_name = input("Enter new name: ").strip().lower()
+            new_category = input("Enter new category: ").strip().lower()
+            new_unit = input("Enter new unit: ").strip().lower()
+            new_price = input("Enter new price: ").strip().lower()
+
+            # Replace old line with new values
+            lines[i] = f"{new_name},{new_category},{new_unit},{new_price}\n"
+            updated = True
+            break
+
+    if updated:
+        with open(MENU_FILE, "w") as file:
+            file.writelines(lines)
+        print("\n" + "-" * 60)
+        print("Item updated successfully.".center(60))
+        print("-" * 60)
+    else:
+        print("\n" + "-" * 60)
+        print("Item not found.".center(60))
+        print("-" * 60)
     manage_menu()
