@@ -33,9 +33,9 @@ def view_order_status():
     print("View Order Status")
 
 def manage_menu():
-    print("\n" + "═" * 50)
-    print("Manage Menu".center(50))
-    print("═" * 50)
+    print("\n" + "═" * 60)
+    print("Manage Menu".center(60))
+    print("═" * 60)
     print("1. Add Food")
     print("2. View Food")
     print("3. Update Food")
@@ -45,7 +45,7 @@ def manage_menu():
         case 1:
             add_item()
         case 2:
-            print("view item")
+            view_all_items()
         case 3:
             print("Update Food")
         case 4:
@@ -117,5 +117,27 @@ def add_item():
     print("\n" + "═" * 50)
     print("Added new food successfully.".center(50))
     print("═" * 50)
+    manage_menu()
 
+#
+def view_all_items():
+    print("\n" + "═" * 60)
+    print("View All Food Items".center(60))
+    print("═" * 60)
+
+    if os.path.exists(MENU_FILE):
+        with open(MENU_FILE, "r") as file:
+            lines = file.readlines()
+            if not lines:
+                print("No food items found.")
+                manage_menu()
+                return
+            else:
+                print(f"{'Item Name':<20} {'Category':<15} {'Unit':<10} {'Price':<10}")
+                print("-" * 60)
+                for line in lines:
+                    item_name, category, unit, price = line.strip().split(",")
+                    print(f"{item_name:<20} {category:<15} {unit:<10} {price:<10}")
+    else:
+        print("Menu file does not exist.")
     manage_menu()
