@@ -22,7 +22,7 @@ def view_order_menu():
 def place_order():
     print("Place Order Interface".center(50))
     print("═" * 50)
-    choose_item = int(input("Enter food item number: "))
+    # choose_item = int(input("Enter food item number: "))
 
 def pay_order():
     print("\n" + "═" * 50)
@@ -32,65 +32,90 @@ def pay_order():
 def view_order_status():
     print("View Order Status")
 
-def menu_interface():
+def manage_menu():
     print("\n" + "═" * 50)
-    print("Customer Menu".center(50))
+    print("Manage Menu".center(50))
     print("═" * 50)
+    print("1. Add Food")
+    print("2. View Food")
+    print("3. Update Food")
+    print("4. Delete Food")
+    choose_number = int(input("Choose an option: "))
+    match choose_number:
+        case 1:
+            add_item()
+        case 2:
+            print("view item")
+        case 3:
+            print("Update Food")
+        case 4:
+            print("Delete Food")
+        case 5:
+            print("Back to Menu")
 
 # Add New Food Item
 def add_item():
-    from modules.manager import manage_menu
-
     print("\n" + "═" * 50)
     print("Add New Food".center(50))
     print("═" * 50)
 
     # Input Item name
     while True:
-        item_name = input("Enter a item name: ").strip().lower()
+        item_name = input("Enter item name: ").strip().lower()
         if not item_name:
-            print("Field is empty. Please enter a item name.")
+            print("Field is empty. Please enter an item name.")
         else:
             break
 
-    # Input Item Category
-    while True:
-        category = input("Enter a item category(e.g.,\nVeg, Non-Veg, Dessert, Beverages): ").strip().lower()
-        if not category:
-            print("Field is empty. Please enter a item category.")
-        else:
-            break
-
-    # Item Unit (plate, pieces, glass, )
-    while True:
-        unit = input("Enter a item unit (e.g.,\nplate, pcs, glass): ").strip().lower()
-        if not unit:
-            print("Field is empty. Please enter a item unit.")
-        else:
-            break
-
-    # Input Item Price
-    item_price = input("Enter a item price: ").strip()
-    try:
-        price = float(item_price)
-        if price <= 0:
-            print("Price must be a positive number.")
-            return
-    except ValueError:
-        print("Invalid price format. Use numbers like 12.50.")
-        return
-
-
+    # Check if item already exists
     if os.path.exists(MENU_FILE):
         with open(MENU_FILE, "r") as file:
             for line in file:
                 if line.strip().split(",")[0] == item_name:
-                    print(f"{item_name} is already Added.")
+                    print(f"'{item_name}' is already added.")
+                    manage_menu()
                     return
 
+    # Input Item Category
+    while True:
+        category = input("Enter item category (e.g., Veg, Non-Veg, Dessert, Beverages): ").strip().lower()
+        if not category:
+            print("Field is empty. Please enter an item category.")
+        else:
+            break
+
+    # Item Unit (plate, pieces, glass)
+    while True:
+        unit = input("Enter item unit (e.g., plate, pcs, glass): ").strip().lower()
+        if not unit:
+            print("Field is empty. Please enter an item unit.")
+        else:
+            break
+
+    price = 0
+    # Input Item Price with proper validation
+    while True:
+        price_input = input("Enter price (e.g., 12.50): ").strip()
+
+        if not price_input:
+            print("Field is empty. Please enter a price.")
+            continue
+
+        try:
+            price = float(price_input)
+            if price <= 0:
+                print("Price must be a positive number.")
+            else:
+                break
+        except ValueError:
+            print("Invalid price format. Please enter a valid number.")
+
+    # Save the new item to the file
     with open(MENU_FILE, "a") as file:
-        file.write(f"{item_name},{category},{unit},{price}\n")
+        file.write(f"{item_name},{category},{unit},{price:.2f}\n")
+
     print("\n" + "═" * 50)
     print("Added new food successfully.".center(50))
     print("═" * 50)
+
     manage_menu()
