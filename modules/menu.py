@@ -50,9 +50,9 @@ def manage_menu():
         case 3:
             update_item()
         case 4:
-            print("Delete Food")
+            delete_item()
         case 5:
-            print("Back to Menu")
+            manage_menu()
 
 # Add New Food Item
 def add_item():
@@ -184,5 +184,44 @@ def update_item():
     else:
         print("\n" + "-" * 60)
         print("Item not found.".center(60))
+        print("-" * 60)
+    manage_menu()
+
+# Delete Item
+def delete_item():
+    print("\n" + "═" * 50)
+    print("Delete Food Item".center(50))
+    print("═" * 50)
+
+    item_to_delete = input("Enter the item name you want to delete: ").strip().lower()
+
+    if not os.path.exists(MENU_FILE):
+        print("\n" + "-" * 60)
+        print("Menu file not found.".center(60))
+        print("-" * 60)
+        manage_menu()
+        return
+
+    with open(MENU_FILE, "r") as file:
+        lines = file.readlines()
+
+    found = False
+    updated_lines = []
+    for line in lines:
+        item_name = line.strip().split(",")[0].lower()
+        if item_name == item_to_delete:
+            found = True
+            continue
+        updated_lines.append(line)
+
+    if found:
+        with open(MENU_FILE, "w") as file:
+            file.writelines(updated_lines)
+        print("\n" + "-" * 60)
+        print(f"'{item_to_delete.capitalize()}' has been deleted from the menu.".center(60))
+        print("-" * 60)
+    else:
+        print("\n" + "-" * 60)
+        print(f"Item '{item_to_delete.capitalize()}' not found.".center(60))
         print("-" * 60)
     manage_menu()
