@@ -1,4 +1,4 @@
-from modules.menu import view_order_menu
+from modules.menu import view_menu
 
 FILE_USER = 'data/users.txt'
 FILE_MENU = 'data/menu.txt'
@@ -11,20 +11,26 @@ def send_feedback():
 
 
 def customer_interface(username):
-    print("\n" + "═" * 50)
-    print("Customer Menu".center(50))
+    print("\n" + "═" * 60)
     print(f"{username.capitalize()}, Welcome to our Restaurant ".upper().center(50))
-    print("═" * 50)
-    print("1. View Menu & Order Food")
-    print("2. Send Feedback")
-    print("3. Update profile")
-    print("4. Cancel")
+    customer_menu()
+
+def customer_menu():
+    print("Customer Menu".center(60))
+    print("═" * 60)
+    print("1. View Menu")
+    print("2. Place Order")
+    print("3. View My Orders")
+    print("4. Delete Order")
+    print("5. Pay for Orders")
+    print("6. Logout (Exit)")
+
     user_selected = int(input("Enter your choice: "))
     match user_selected:
         case 1:
-            view_order_menu()
+            view_menu()
         case 2:
-            send_feedback()
+            ""
         case 3:
             ""
         case 4:
