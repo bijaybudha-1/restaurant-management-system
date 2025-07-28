@@ -24,7 +24,7 @@ def view_menu(username):
         case "y":
             add_order(username)
         case "n":
-            exit()
+            customer_menu(username)
     customer_menu(username)
 
 def add_order(username):
