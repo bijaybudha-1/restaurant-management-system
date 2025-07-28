@@ -1,6 +1,9 @@
+import os
+
 from modules.crud import admin_add_user, view_staff, update_profile, update_user_profile, delete_user_profile
 
 USER_FILE = 'data/users.txt'
+FEEDBACK_FILE = 'data/feedback.txt'
 
 def manage_staff(username):
     print("\n" + "═" * 50)
@@ -29,8 +32,32 @@ def manage_staff(username):
 def view_sales_report():
     print("View Sales Report")
 
-def view_feedback():
-    print("View Feedback")
+def view_feedback(stored_username):
+    print("\n" + "═" * 50)
+    print("CUSTOMER FEEDBACK".center(50))
+    print("═" * 50)
+
+    if not os.path.exists(FEEDBACK_FILE) or os.path.getsize(FEEDBACK_FILE) == 0:
+        print("No feedback received yet.".center(50))
+        print("═" * 50)
+        return
+
+    with open(FEEDBACK_FILE, "r") as file:
+        lines = file.readlines()
+
+    print(f"{'S.N.':<6}{'Username':<20}{'Feedback'}")
+    print("-" * 50)
+
+    for i, line in enumerate(lines, start=1):
+        parts = line.strip().split(",", 1)
+        if len(parts) == 2:
+            username, feedback = parts
+            print(f"{i:<6}{username:<20}{feedback}")
+        else:
+            print(f"{i:<6}{'Invalid Entry':<20}{line.strip()}")
+
+    print("\n" + "═" * 50)
+    admin_interface(stored_username)
 
 def greeting_interface(username):
     print("\n" + "═" * 50)
@@ -54,7 +81,7 @@ def admin_interface(username):
         case 2:
             view_sales_report()
         case 3:
-            view_feedback()
+            view_feedback(username)
         case 4:
             update_profile(username)
 
