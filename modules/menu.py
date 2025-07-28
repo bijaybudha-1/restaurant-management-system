@@ -104,7 +104,7 @@ def add_order(username):
     if confirm == 'y':
         with open("data/orders.txt", "a") as order_file:
             for name, qty, total in order_items:
-                order_file.write(f"{username},{name},{qty},{total:.2f},pending\n")
+                order_file.write(f"{username},{name},{qty},{total:.2f},pending,unpaid\n")
         print("\n" + "-" * 60)
         print("Order confirmed and saved!".center(60))
         print("-" * 60)
@@ -122,16 +122,19 @@ def add_order(username):
     print("\n" + "═" * 60)
     customer_menu(username)
 
-# View My Orders
+
+# View my Order Function
+
 def view_my_orders(username):
     from modules.customer import customer_menu
-    print("\n" + "═" * 60)
-    print("MY ORDERS".center(60))
-    print("═" * 60)
+    from modules.customer import add_order
+    print("\n" + "═" * 80)
+    print("MY ORDERS".center(80))
+    print("═" * 80)
 
     if not os.path.exists(ORDERS_FILE):
         print("No orders found.")
-        print("═" * 60)
+        print("═" * 80)
         return
 
     with open(ORDERS_FILE, "r") as file:
@@ -139,30 +142,36 @@ def view_my_orders(username):
 
     total = 0
     has_orders = False
-    print(f"{'S.N.':<5}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Status'}")
-    print("-" * 60)
+    print(f"{'S.N.':<5}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Order Status':<15}{'Payment Status'}")
+    print("-" * 80)
 
     count = 1
     for line in lines:
-        user, name, qty, cost, status = line.strip().split(",")
+        parts = line.strip().split(",")
+        if len(parts) != 6:
+            continue  # Skip invalid lines
+
+        user, name, qty, cost, order_status, payment_status = parts
         if user == username:
-            print(f"{count:<5}{name:<20}{qty:<5}{'Rs.' + cost:<15}{status}")
+            print(f"{count:<5}{name:<20}{qty:<5}{'Rs.' + cost:<15}{order_status:<15}{payment_status}")
             total += float(cost)
             count += 1
             has_orders = True
 
     if has_orders:
-        print("-" * 60)
-        print(f"{'Total Amount':>45} : Rs.{total:.2f}")
+        print("-" * 80)
+        print(f"{'Total Amount':>65} : Rs.{total:.2f}")
     else:
-        print("No orders found.".center(60))
-    print("-" * 60)
-    user_choose = input("If you would like to place order, enter Y or N: ")
-    if user_choose.lower() != 'y':
-        print("\n" + "═" * 60)
-        customer_menu(username)
-    else:
+        print("No orders found.".center(80))
+    print("-" * 80)
+
+    user_choose = input("Would you like to place a new order? (Y/N): ").strip().lower()
+    if user_choose == 'y':
         add_order(username)
+    else:
+        print("\n" + "═" * 80)
+        customer_menu(username)
+
 
 # Allow the user to delete one of their pending orders.
 # Delete Order
@@ -238,10 +247,69 @@ def send_feedback(username):
     customer_menu(username)
 
 
-def pay_order():
-    print("\n" + "═" * 50)
-    print("Pay Order")
-    print("═" * 50)
+def pay_order(username):
+    from modules.customer import customer_menu
+    print("\n" + "═" * 60)
+    print("CHECK & PAY YOUR ORDERS".center(60))
+    print("═" * 60)
+
+    if not os.path.exists(ORDERS_FILE):
+        print("No orders found.")
+        print("═" * 60)
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        lines = file.readlines()
+
+    unpaid_orders = []
+    updated_lines = []
+    total_to_pay = 0
+    has_unpaid = False
+
+    for line in lines:
+        parts = line.strip().split(",")
+        if len(parts) != 6:
+            updated_lines.append(line)
+            continue
+
+        user, name, qty, cost, order_status, payment_status = parts
+
+        if user == username and order_status.lower() == "complete" and payment_status.lower() == "unpaid":
+            unpaid_orders.append((name, qty, cost))
+            total_to_pay += float(cost)
+            updated_lines.append(f"{user},{name},{qty},{cost},{order_status},Paid\n")
+            has_unpaid = True
+        else:
+            updated_lines.append(line)
+
+    if has_unpaid:
+        print("-" * 60)
+        print(f"{'S.N':<5}{'Item Name':<20}{'Qty':<10}{'Price (Rs.)'}")
+        print("-" * 60)
+        for i, (name, qty, cost) in enumerate(unpaid_orders, start=1):
+            print(f"{i:<5}{name:<20}{qty:<10}{cost}")
+        print("-" * 60)
+        print(f"{'Total to Pay':>40} : Rs.{total_to_pay:.2f}")
+        print("-" * 60)
+
+        confirm = input("Do you want to proceed with payment? (Y/N): ").strip().lower()
+        print("\n" + "-" * 60)
+        if confirm == 'y':
+            with open(ORDERS_FILE, "w") as file:
+                file.writelines(updated_lines)
+            print(f"Payment successful! Total paid: Rs.{total_to_pay:.2f}".center(60))
+            print("-" * 60)
+        else:
+            print("Payment cancelled.".center(60))
+            print("-" * 60)
+    else:
+        print("\n" + "-" * 60)
+        print("No unpaid and completed orders found.".center(60))
+        print("-" * 60)
+
+    print("\n" + "═" * 60)
+    customer_menu(username)
+
 
 def view_order_status():
     print("View Order Status")
