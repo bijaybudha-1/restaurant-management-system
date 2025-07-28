@@ -18,12 +18,12 @@ def view_menu(username):
         print(f"{food_id:<5}{name:<20}{category:<15}{unit:<10}{price}")
         food_id += 1
     print("\n" + "═" * 60)
-    # user_choose = input("If you would like to place order, enter Y or N: ")
-    # match user_choose.lower():
-    #     case "y":
-    #         place_order()
-    #     case "n":
-    #         exit()
+    user_choose = input("If you would like to place order, enter Y or N: ")
+    match user_choose.lower():
+        case "y":
+            add_order(username)
+        case "n":
+            exit()
     customer_menu(username)
 
 def add_order(username):
@@ -107,6 +107,13 @@ def add_order(username):
         print("\n" + "-" * 60)
         print("Order confirmed and saved!".center(60))
         print("-" * 60)
+        user_choose = input("If you would like to View your order, enter Y or N: ")
+        match user_choose.lower():
+            case "y":
+                view_my_orders(username)
+            case "n":
+                return
+
     else:
         print("\n" + "-" * 60)
         print("Order canceled.".center(60))
