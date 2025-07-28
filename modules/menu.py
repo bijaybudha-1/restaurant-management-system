@@ -3,7 +3,8 @@ import os
 MENU_FILE = 'data/menu.txt'
 ORDERS_FILE = 'data/orders.txt'
 
-def view_menu():
+# Customer Menu Crud Operation
+def view_menu(username):
     from modules.customer import customer_menu
     print("\n" + "═" * 60)
     print("View Menu".upper().center(60))
@@ -23,7 +24,7 @@ def view_menu():
     #         place_order()
     #     case "n":
     #         exit()
-    customer_menu(None)
+    customer_menu(username)
 
 def add_order(username):
     from modules.customer import customer_menu
@@ -154,6 +155,49 @@ def view_my_orders(username):
         customer_menu(username)
     else:
         add_order(username)
+
+# Allow the user to delete one of their pending orders.
+# Delete Order
+def delete_order(username):
+    from modules.customer import customer_menu
+    if not os.path.exists(ORDERS_FILE):
+        print("\n" + "-" * 60)
+        print("No orders to delete.".center(60))
+        print("-" * 60)
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        lines = file.readlines()
+
+    new_lines = []
+    deleted = False
+    item_to_delete = input("Enter the name of the item you want to delete from your order: ").strip().lower()
+
+    for line in lines:
+        fields = line.strip().split(",")
+        if len(fields) >= 5:
+            user, name = fields[0], fields[1]
+            status = fields[4].lower()
+            if user == username and name.lower() == item_to_delete and status == "pending":
+                deleted = True
+                continue  # skip this line (delete it)
+        new_lines.append(line)
+
+    with open(ORDERS_FILE, "w") as file:
+        file.writelines(new_lines)
+
+    if deleted:
+        print("\n" + "-" * 60)
+        print(f"Order for '{item_to_delete}' deleted.".center(60))
+        print("-" * 60)
+        print("\n" + "═" * 60)
+        customer_menu(username)
+    else:
+        print("\n" + "-" * 60)
+        print(f"No pending order found for '{item_to_delete}'.".center(60))
+        print("-" * 60)
+        print("\n" + "═" * 60)
+        customer_menu(username)
 
 
 def pay_order():
