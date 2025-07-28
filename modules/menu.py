@@ -111,7 +111,7 @@ def add_order(username):
         print("\n" + "-" * 60)
         print("Order canceled.".center(60))
         print("-" * 60)
-        print("═" * 60)
+    print("\n" + "═" * 60)
     customer_menu(username)
 
 # View My Orders
