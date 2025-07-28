@@ -79,6 +79,7 @@ def add_order(username):
         print("\n" + "-" * 60)
         print("No items in order.".center(60))
         print("-" * 60)
+        print("\n" + "═" * 60)
         customer_menu(username)
         return
 
@@ -112,6 +113,47 @@ def add_order(username):
         print("═" * 60)
     customer_menu(username)
 
+# View My Orders
+def view_my_orders(username):
+    from modules.customer import customer_menu
+    print("\n" + "═" * 60)
+    print("MY ORDERS".center(60))
+    print("═" * 60)
+
+    if not os.path.exists(ORDERS_FILE):
+        print("No orders found.")
+        print("═" * 60)
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        lines = file.readlines()
+
+    total = 0
+    has_orders = False
+    print(f"{'S.N.':<5}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Status'}")
+    print("-" * 60)
+
+    count = 1
+    for line in lines:
+        user, name, qty, cost, status = line.strip().split(",")
+        if user == username:
+            print(f"{count:<5}{name:<20}{qty:<5}{'Rs.' + cost:<15}{status}")
+            total += float(cost)
+            count += 1
+            has_orders = True
+
+    if has_orders:
+        print("-" * 60)
+        print(f"{'Total Amount':>45} : Rs.{total:.2f}")
+    else:
+        print("No orders found.".center(60))
+    print("-" * 60)
+    user_choose = input("If you would like to place order, enter Y or N: ")
+    if user_choose.lower() != 'y':
+        print("\n" + "═" * 60)
+        customer_menu(username)
+    else:
+        add_order(username)
 
 
 def pay_order():
@@ -122,6 +164,7 @@ def pay_order():
 def view_order_status():
     print("View Order Status")
 
+# Manager Manage Menu Panel
 def manage_menu(username):
     from modules.manager import manager_panel
     print("\n" + "═" * 60)
