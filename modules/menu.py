@@ -2,6 +2,7 @@ import os
 
 MENU_FILE = 'data/menu.txt'
 ORDERS_FILE = 'data/orders.txt'
+FEEDBACK_FILE = 'data/feedback.txt'
 
 # Customer Menu Crud Operation
 def view_menu(username):
@@ -205,6 +206,36 @@ def delete_order(username):
         print("-" * 60)
         print("\n" + "═" * 60)
         customer_menu(username)
+
+# Send feedback
+def send_feedback(username):
+    from modules.customer import customer_menu
+
+    print("\n" + "═" * 60)
+    print("SEND FEEDBACK".center(60))
+    print("═" * 60)
+
+    feedback = input("Enter your feedback: ").strip()
+
+    if not feedback:
+        print("\n" + "-" * 60)
+        print("Feedback cannot be empty.".center(60))
+        print("-" * 60)
+        print("\n" + "═" * 60)
+        customer_menu(username)
+        return
+
+    try:
+        with open(FEEDBACK_FILE, "a") as file:
+            file.write(f"{username},{feedback}\n")
+        print("\n" + "-" * 60)
+        print("Your feedback has been sent to the administrator.".center(60))
+        print("-" * 60)
+    except Exception as e:
+        print("Failed to send feedback:", str(e))
+
+    print("\n" + "═" * 60)
+    customer_menu(username)
 
 
 def pay_order():
