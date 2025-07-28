@@ -25,6 +25,95 @@ def view_menu():
     #         exit()
     customer_menu(None)
 
+def add_order(username):
+    from modules.customer import customer_menu
+
+    print("\n" + "═" * 60)
+    print("Place Order".center(60))
+    print("═" * 60)
+
+    # temporary list to store ordered items
+    order_items = []
+    order_items_num = 1
+
+    while True:
+        item_name = input("Enter item name: ").strip()
+        quantity_input = input("Enter quantity: ").strip()
+
+        if not item_name or not quantity_input.isdigit() or int(quantity_input) <= 0:
+            print("\n" + "-" * 60)
+            print("Invalid input.".center(60))
+            print("-" * 60)
+        else:
+            quantity = int(quantity_input)
+            found = False
+            try:
+                with open("data/menu.txt", "r") as menu_file:
+                    for line in menu_file:
+                        name, category, unit, price = line.strip().split(",")
+                        if name.lower() == item_name.lower():
+                            total = float(price) * quantity
+                            order_items.append((name, quantity, total))
+                            print("\n" + "-" * 60)
+                            print(f"Added: {quantity} x {name} = Rs.{total:.2f}")
+                            print("-" * 60)
+                            found = True
+                            break
+                if not found:
+                    print("\n" + "-" * 60)
+                    print("Item not found.".center(60))
+                    print("-" * 60)
+            except FileNotFoundError:
+                print("\n" + "-" * 60)
+                print("Menu file not found.".center(60))
+                print("-" * 60)
+                customer_menu(username)
+                return
+
+        # Ask if they want to add more items
+        choice = input("Do you want to order another item? (y/n): ").strip().lower()
+        if choice != 'y':
+            break
+
+    if not order_items:
+        print("\n" + "-" * 60)
+        print("No items in order.".center(60))
+        print("-" * 60)
+        customer_menu(username)
+        return
+
+    # Show order summary
+    print("\n" + "═" * 60)
+    print("Order Summary".center(60))
+    print("═" * 60)
+    grand_total = 0
+    print(f"{'S.N':<5}{'Item Name':<25}{'Quantity':<15}{'Price'}")
+    print("-" * 60)
+    for name, qty, total in order_items:
+        print(f"{order_items_num:<5}{name:<25} {qty:<15}Rs.{total:.2f}")
+        grand_total += total
+        order_items_num += 1
+    print("\n" + "-" * 60)
+    print(f"{'Total':>45} : Rs.{grand_total:.2f}")
+    print("-" * 60)
+
+    confirm = input("Do you want to confirm this order? (y/n): ").strip().lower()
+    if confirm == 'y':
+        with open("data/orders.txt", "a") as order_file:
+            for name, qty, total in order_items:
+                order_file.write(f"{username},{name},{qty},{total:.2f},pending\n")
+        print("\n" + "-" * 60)
+        print("Order confirmed and saved!".center(60))
+        print("-" * 60)
+    else:
+        print("\n" + "-" * 60)
+        print("Order canceled.".center(60))
+        print("-" * 60)
+        print("═" * 60)
+    customer_menu(username)
+
+
+
 def pay_order():
     print("\n" + "═" * 50)
     print("Pay Order")
