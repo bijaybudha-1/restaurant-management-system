@@ -257,7 +257,6 @@ def delete_user_profile():
         print("-" * 50)
 
 # =================== Manager Crud Operation =========================
-
 # ===================== View Customer List ===========================
 def view_customer(stored_username):
     from modules.manager import manage_customer, manager_panel

@@ -4,7 +4,8 @@ MENU_FILE = 'data/menu.txt'
 ORDERS_FILE = 'data/orders.txt'
 FEEDBACK_FILE = 'data/feedback.txt'
 
-# Customer Menu Crud Operation
+# =======================  Customer Menu Section  ======================
+# ===========================  View Menu  ==============================
 def view_menu(username):
     from modules.customer import customer_menu
     print("\n" + "═" * 60)
@@ -29,6 +30,7 @@ def view_menu(username):
     print("\n" + "═" * 60)
     customer_menu(username)
 
+# ===========================  Add Order  =============================
 def add_order(username):
     from modules.customer import customer_menu
 
@@ -115,6 +117,8 @@ def add_order(username):
             case "y":
                 view_my_orders(username)
             case "n":
+                print("\n" + "═" * 60)
+                customer_menu(username)
                 return
 
     else:
@@ -124,9 +128,7 @@ def add_order(username):
     print("\n" + "═" * 60)
     customer_menu(username)
 
-
-# View my Order Function
-
+# =============================  View My Orders  ==================================
 def view_my_orders(username):
     from modules.customer import customer_menu
     from modules.customer import add_order
@@ -174,9 +176,8 @@ def view_my_orders(username):
         print("\n" + "═" * 80)
         customer_menu(username)
 
-
-# Allow the user to delete one of their pending orders.
-# Delete Order
+# ============================  Delete Order  ===========================
+# Customers can cancel their order as long as it is still pending.
 def delete_order(username):
     from modules.customer import customer_menu
     if not os.path.exists(ORDERS_FILE):
@@ -218,7 +219,7 @@ def delete_order(username):
         print("\n" + "═" * 60)
         customer_menu(username)
 
-# Send feedback
+# ===========================  Send Feedback to Admin  ===========================
 def send_feedback(username):
     from modules.customer import customer_menu
 
@@ -248,7 +249,7 @@ def send_feedback(username):
     print("\n" + "═" * 60)
     customer_menu(username)
 
-
+# ======================= Add Pay  ===========================
 def pay_order(username):
     from modules.customer import customer_menu
     print("\n" + "═" * 60)
@@ -313,10 +314,8 @@ def pay_order(username):
     customer_menu(username)
 
 
-def view_order_status():
-    print("View Order Status")
-
-# Manager Manage Menu Panel
+# ============================  Manager Manage Menu Panel ============================
+# =================================  Manage Menu  ====================================
 def manage_menu(username):
     from modules.manager import manager_panel
     print("\n" + "═" * 60)
@@ -341,7 +340,7 @@ def manage_menu(username):
             print("\n" + "═" * 50)
             manager_panel(username)
 
-# Add New Food Item
+# ==============================  Add New Item  ====================================
 def add_item():
     print("\n" + "═" * 60)
     print("Add New Food".center(60))
@@ -413,7 +412,7 @@ def add_item():
     print("-" * 60)
     manage_menu(None)
 
-# View All Items
+# ==================================  View All Items  ========================================
 def view_all_items():
     print("\n" + "═" * 60)
     print("View All Food Items".center(60))
@@ -436,7 +435,7 @@ def view_all_items():
         print("Menu file does not exist.")
     manage_menu(None)
 
-# Update Item function
+# ===============================  Update Items  ====================================
 def update_item():
     print("\n" + "═" * 60)
     print("Update Food Item".center(60))
@@ -482,7 +481,7 @@ def update_item():
         print("-" * 60)
     manage_menu(None)
 
-# Delete Item
+# ======================================  Delete Items  ======================================
 def delete_item():
     print("\n" + "═" * 60)
     print("Delete Food Item".center(60))

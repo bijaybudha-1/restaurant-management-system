@@ -7,6 +7,54 @@ from modules.menu import ORDERS_FILE
 USER_FILE = 'data/users.txt'
 FEEDBACK_FILE = 'data/feedback.txt'
 
+# ============================ Admin Greeting Interface  ======================================
+def greeting_interface(username):
+    print("\n" + "═" * 50)
+    print(f"{username.upper()}, Welcome to the Restaurant Management System ".center(50))
+    admin_interface(username)
+
+# ================================  Admin Interface ======================================
+def admin_interface(username):
+    from modules.auth import auth_interface
+    while True:
+        print("\n" + "═" * 50)
+        print("Admin Panel".center(50))
+        print("═" * 50)
+        print("1. Manage Staff")
+        print("2. View Sales Report")
+        print("3. View Feedback")
+        print("4. Update Profile")
+        print("5. Log out (Exit)")
+        print("═" * 50)
+
+        try:
+            admin_choose = int(input("Choose an option (1–5): ").strip())
+            match admin_choose:
+                case 1:
+                    manage_staff(username)
+                    break
+                case 2:
+                    view_sales_report(username)
+                    break
+                case 3:
+                    view_feedback(username)
+                    break
+                case 4:
+                    update_own_profile(username)
+                    break
+                case 5:
+                    auth_interface()
+                    break
+                case _:
+                    print("-" * 50)
+                    print("Please select a number between 1 and 5.".center(50))
+                    print("-" * 50)
+        except ValueError:
+            print("\n" + "-" * 50)
+            print("Invalid input. Please enter a number.".center(50))
+            print("-" * 50)
+
+# =================================  Manage Staff  =============================
 def manage_staff(username):
     while True:
         print("\n" + "═" * 50)
@@ -46,7 +94,7 @@ def manage_staff(username):
             print("Invalid input. Please enter a valid number.".center(50))
             print("-" * 50)
 
-
+#  ===============================  View Sales Report  ==================================
 def view_sales_report(username):
     print("\n" + "═" * 50)
     print("SALES REPORT PANEL".center(50))
@@ -106,7 +154,7 @@ def view_sales_report(username):
 
     print("-" * 50)
 
-
+#  ============================== View Feedback  ================================
 def view_feedback(stored_username):
     print("\n" + "═" * 50)
     print("CUSTOMER FEEDBACK".center(50))
@@ -134,52 +182,7 @@ def view_feedback(stored_username):
     print("\n" + "═" * 50)
     admin_interface(stored_username)
 
-def greeting_interface(username):
-    print("\n" + "═" * 50)
-    print(f"{username.upper()}, Welcome to the Restaurant Management System ".center(50))
-    admin_interface(username)
-
-
+# ==================================  Update Oen Profile  =================================
 def update_own_profile(username):
     update_profile(username)
     admin_interface(username)
-
-def admin_interface(username):
-    from modules.auth import auth_interface
-    while True:
-        print("\n" + "═" * 50)
-        print("Admin Panel".center(50))
-        print("═" * 50)
-        print("1. Manage Staff")
-        print("2. View Sales Report")
-        print("3. View Feedback")
-        print("4. Update Profile")
-        print("5. Log out (Exit)")
-        print("═" * 50)
-
-        try:
-            admin_choose = int(input("Choose an option (1–5): ").strip())
-            match admin_choose:
-                case 1:
-                    manage_staff(username)
-                    break
-                case 2:
-                    view_sales_report(username)
-                    break
-                case 3:
-                    view_feedback(username)
-                    break
-                case 4:
-                    update_own_profile(username)
-                    break
-                case 5:
-                    auth_interface()
-                    break
-                case _:
-                    print("-" * 50)
-                    print("Please select a number between 1 and 5.".center(50))
-                    print("-" * 50)
-        except ValueError:
-            print("\n" + "-" * 50)
-            print("Invalid input. Please enter a number.".center(50))
-            print("-" * 50)

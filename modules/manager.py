@@ -1,8 +1,48 @@
-
 from modules.crud import update_profile, add_customer, update_customer_profile, delete_customer, view_customer
 from modules.menu import manage_menu
 
 
+# ===============================  Manager Interface  =================================
+def manager_interface(username):
+    print("\n" + "═" * 50)
+    print(f"{username}, Welcome to the Restaurant Management System!")
+    manager_panel(username)
+
+# ==============================  Manager Panel  =================================
+def manager_panel(username):
+    from modules.auth import auth_interface
+    print("\n" + "═" * 50)
+    print("Manager Main Panel".center(50))
+    print("═" * 50)
+    print("1. Manage Customers")
+    print("2. Manage Menu")
+    print("3. Update Profile")
+    print("4. Logout (Exit)")
+
+    try:
+        choose_number = int(input("Choose an option (1–4): "))
+        match choose_number:
+            case 1:
+                manage_customer(username)
+            case 2:
+                manage_menu(username)
+            case 3:
+                manager_update_profile(username)
+            case 4:
+                auth_interface()
+            case _:
+                print("\n" + "-" * 50)
+                print("Please enter a number between 1 and 4.".center(50))
+                print("-" * 50)
+                manager_panel(username)
+    except ValueError:
+        print("\n" + "-" * 50)
+        print("Invalid input. Please enter a number.".center(50))
+        print("-" * 50)
+        manager_panel(username)
+
+
+# ===============================  Manage Customer Panel  =================================
 def manage_customer(username):
     print("\n" + "═" * 50)
     print("Manage Customer Panel".center(50))
@@ -36,44 +76,9 @@ def manage_customer(username):
         print("Invalid input. Please enter a number.".center(50))
         print("-" * 50)
         manage_customer(username)
+
+# ==================================  Manager Update Own Profile  =========================
 def manager_update_profile(username):
     update_profile(username)
     print("═" * 50)
     manager_panel(username)
-
-def manager_interface(username):
-    print("\n" + "═" * 50)
-    print(f"{username}, Welcome to the Restaurant Management System!")
-    manager_panel(username)
-
-def manager_panel(username):
-    from modules.auth import auth_interface
-    print("\n" + "═" * 50)
-    print("Manager Main Panel".center(50))
-    print("═" * 50)
-    print("1. Manage Customers")
-    print("2. Manage Menu")
-    print("3. Update Profile")
-    print("4. Logout (Exit)")
-
-    try:
-        choose_number = int(input("Choose an option (1–4): "))
-        match choose_number:
-            case 1:
-                manage_customer(username)
-            case 2:
-                manage_menu(username)
-            case 3:
-                manager_update_profile(username)
-            case 4:
-                auth_interface()
-            case _:
-                print("\n" + "-" * 50)
-                print("Please enter a number between 1 and 4.".center(50))
-                print("-" * 50)
-                manager_panel(username)
-    except ValueError:
-        print("\n" + "-" * 50)
-        print("Invalid input. Please enter a number.".center(50))
-        print("-" * 50)
-        manager_panel(username)

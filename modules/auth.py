@@ -8,6 +8,25 @@ from modules.manager import manager_interface
 
 USER_FILE = 'data/users.txt'
 
+# ======================================  Auth Interface  ==================================
+def auth_interface():
+    print("═" * 50)
+    print("Welcome to Restaurant Management System!".center(50))
+    print("User Authentication Interface".center(50))
+    print("═" * 50)
+    print("1. Register a new user")
+    print("2. User Login")
+    print("3. Exit")
+    choice = input("Enter your choice: ")
+    match choice:
+        case "1":
+            registration()
+        case "2":
+                login()
+        case "3":
+                exit()
+
+# ============================  Registration  ==============================
 def registration():
     print("═" * 50)
     print("User Registration".center(50).upper())
@@ -28,7 +47,7 @@ def registration():
     print("Registration successful.")
     login()
 
-
+# =============================  login  ===================================
 def login():
     print("\n" + "═" * 50)
     print("User Login".center(50).upper())
@@ -91,6 +110,7 @@ def login():
     print("Username or email not found.")
     print("-" * 50)
 
+#  =================================  Reset Password  ====================================
 def reset_password(stored_email):
     reset_status = input("Do you want to reset your password? (y/n): ")
     if reset_status.lower() ==  "y":
@@ -100,6 +120,7 @@ def reset_password(stored_email):
     else:
         print("Invalid input key.")
 
+# =========================  Email Check  ================================
 def email_checker(stored_email):
     print("\n" + "═" * 50)
     print("Email Verification".center(50).upper())
@@ -120,7 +141,7 @@ def email_checker(stored_email):
                 print("You have entered wrong email 3 times. Access denied.")
                 print("─" * 50)
 
-
+# ===========================  OTP Generator  ===============================
 def otp_generator(email):
     print("\n" + "═" * 50)
     print("OTP Code Generator".center(50).upper())
@@ -130,6 +151,7 @@ def otp_generator(email):
     entered_otp = input("Enter your OTP code: ")
     otp_checker(otp, entered_otp, email)
 
+# ===============================  OTP Checker  ==================================
 def otp_checker(otp, entered_otp, email):
     print("\n" + "═" * 50)
     print(f"OTP Checker".center(50))
@@ -141,6 +163,7 @@ def otp_checker(otp, entered_otp, email):
         print(f"Your OTP code is incorrect.")
         print("─" * 50)
 
+# =================================  Password Reset  ===================================
 def password_reset(email):
     print("\n" + "═" * 50)
     print("RESET YOUR PASSWORD".center(50))
@@ -180,20 +203,3 @@ def password_reset(email):
     else:
         print("Username not found.")
     print("═" * 50 + "\n")
-
-def auth_interface():
-    print("═" * 50)
-    print("Welcome to Restaurant Management System!".center(50))
-    print("User Authentication Interface".center(50))
-    print("═" * 50)
-    print("1. Register a new user")
-    print("2. User Login")
-    print("3. Exit")
-    choice = input("Enter your choice: ")
-    match choice:
-        case "1":
-            registration()
-        case "2":
-                login()
-        case "3":
-                exit()

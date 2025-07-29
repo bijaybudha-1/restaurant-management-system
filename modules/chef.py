@@ -6,8 +6,9 @@ FILE_NAME = 'data/users.txt'
 MENU_FILE = 'data/menu.txt'
 ORDERS_FILE = 'data/orders.txt'
 
-def update_chef_profile(username):
-    update_profile(username)
+def chef_interface(username):
+    print("\n" + "═" * 50)
+    print(f"{username.capitalize()}, Welcome to the Restaurant Management System!")
     chef_menu(username)
 
 def chef_menu(username):
@@ -42,6 +43,39 @@ def chef_menu(username):
         print("-" * 50)
         chef_menu(username)
 
+# ============================  View Order Chef  ===============================
+def view_orders_chef(username):
+    print("\n" + "═" * 85)
+    print("ORDERS PLACED BY CUSTOMERS".center(85))
+    print("═" * 85)
+
+    if not os.path.exists(ORDERS_FILE):
+        print("No orders file found.")
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        lines = file.readlines()
+
+    if not lines:
+        print("No orders have been placed yet.")
+        return
+
+    print(f"{'S.N.':<5}{'Customer':<15}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Status':<15}{'Payment'}")
+    print("-" * 85)
+
+    count = 1
+    for line in lines:
+        parts = line.strip().split(",")
+        if len(parts) != 6:
+            continue
+
+        username, item, qty, price, order_status, payment_status = parts
+        print(f"{count:<5}{username:<15}{item:<20}{qty:<5}{'Rs.' + price:<15}{order_status:<15}{payment_status}")
+        count += 1
+    print("-" * 85)
+    chef_menu(username)
+
+# =============================  Update Order Status  ===============================
 def update_order_status(username):
     print("\n" + "═" * 70)
     print("UPDATE ORDER STATUS".center(70))
@@ -100,39 +134,8 @@ def update_order_status(username):
         print("-" * 70)
         chef_menu(username)
 
-def view_orders_chef(username):
-    print("\n" + "═" * 85)
-    print("ORDERS PLACED BY CUSTOMERS".center(85))
-    print("═" * 85)
-
-    if not os.path.exists(ORDERS_FILE):
-        print("No orders file found.")
-        return
-
-    with open(ORDERS_FILE, "r") as file:
-        lines = file.readlines()
-
-    if not lines:
-        print("No orders have been placed yet.")
-        return
-
-    print(f"{'S.N.':<5}{'Customer':<15}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Status':<15}{'Payment'}")
-    print("-" * 85)
-
-    count = 1
-    for line in lines:
-        parts = line.strip().split(",")
-        if len(parts) != 6:
-            continue
-
-        username, item, qty, price, order_status, payment_status = parts
-        print(f"{count:<5}{username:<15}{item:<20}{qty:<5}{'Rs.' + price:<15}{order_status:<15}{payment_status}")
-        count += 1
-    print("-" * 85)
+# ==============================  Update Own Profile  ==================================
+def update_chef_profile(username):
+    update_profile(username)
     chef_menu(username)
 
-
-def chef_interface(username):
-    print("\n" + "═" * 50)
-    print(f"{username.capitalize()}, Welcome to the Restaurant Management System!")
-    chef_menu(username)

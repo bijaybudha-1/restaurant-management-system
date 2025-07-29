@@ -5,15 +5,13 @@ from modules.menu import view_menu, add_order, view_my_orders, delete_order, sen
 FILE_USER = 'data/users.txt'
 FILE_MENU = 'data/menu.txt'
 
+# ============================  Customer Interface  =================================
 def customer_interface(username):
     print("\n" + "═" * 60)
     print(f"{username.capitalize()}, Welcome to our Restaurant ".upper().center(60))
     customer_menu(username)
 
-def update_own_profile(username):
-    update_profile(username)
-    customer_menu(username)
-
+# ============================  Customer Menu  ========================================
 def customer_menu(username):
     from modules.auth import auth_interface
     print("Customer Menu".center(60))
@@ -45,3 +43,8 @@ def customer_menu(username):
             update_own_profile(username)
         case 8:
             auth_interface()
+
+# ==================================  Update Own Profile  =================================
+def update_own_profile(username):
+    update_profile(username)
+    customer_menu(username)
