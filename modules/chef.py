@@ -24,7 +24,7 @@ def chef_menu(username):
         choose_number = int(input("Enter your choice (1-4): "))
         match choose_number:
             case 1:
-                print("Showing Orders...")
+                view_orders_chef(username)
             case 2:
                 update_order_status(username)
             case 3:
@@ -99,6 +99,37 @@ def update_order_status(username):
         print("Invalid input.".center(70))
         print("-" * 70)
         chef_menu(username)
+
+def view_orders_chef(username):
+    print("\n" + "═" * 85)
+    print("ORDERS PLACED BY CUSTOMERS".center(85))
+    print("═" * 85)
+
+    if not os.path.exists(ORDERS_FILE):
+        print("No orders file found.")
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        lines = file.readlines()
+
+    if not lines:
+        print("No orders have been placed yet.")
+        return
+
+    print(f"{'S.N.':<5}{'Customer':<15}{'Item Name':<20}{'Qty':<5}{'Price':<15}{'Status':<15}{'Payment'}")
+    print("-" * 85)
+
+    count = 1
+    for line in lines:
+        parts = line.strip().split(",")
+        if len(parts) != 6:
+            continue
+
+        username, item, qty, price, order_status, payment_status = parts
+        print(f"{count:<5}{username:<15}{item:<20}{qty:<5}{'Rs.' + price:<15}{order_status:<15}{payment_status}")
+        count += 1
+    print("-" * 85)
+    chef_menu(username)
 
 
 def chef_interface(username):
