@@ -1,7 +1,10 @@
+import os
+
 from modules.crud import update_profile
 
 FILE_NAME = 'data/users.txt'
 MENU_FILE = 'data/menu.txt'
+ORDERS_FILE = 'data/orders.txt'
 
 def update_chef_profile(username):
     update_profile(username)
@@ -21,11 +24,69 @@ def chef_menu(username):
         case 1:
             print("view Orders")
         case 2:
-            print("Update Orders Status")
+            update_order_status(username)
         case 3:
             update_chef_profile(username)
         case 4:
             auth_interface()
+
+def update_order_status(username):
+    print("\n" + "═" * 70)
+    print("UPDATE ORDER STATUS".center(70))
+    print("═" * 70)
+
+    if not os.path.exists(ORDERS_FILE):
+        print("No orders found.")
+        return
+
+    with open(ORDERS_FILE, "r") as file:
+        orders = file.readlines()
+
+    updatable_orders = []
+    print(f"{'S.N':<5}{'Customer':<15}{'Item':<20}{'Qty':<6}{'Cost':<10}{'Status':<10}")
+    print("-" * 70)
+
+    for i, line in enumerate(orders):
+        parts = line.strip().split(",")
+        if len(parts) == 6:
+            user, item, qty, cost, order_status, payment_status = parts
+            print(f"{i+1:<5}{user:<15}{item:<20}{qty:<6}{cost:<10}{order_status}")
+            updatable_orders.append((i, parts))
+
+    try:
+        sn = int(input("\nEnter the S.N of the order to update: "))
+        if sn < 1 or sn > len(updatable_orders):
+            print("\n" + "-" * 70)
+            print("Invalid selection.".center(70))
+            print("-" * 70)
+            chef_menu(username)
+            return
+
+        index, order_parts = updatable_orders[sn - 1]
+        new_status = input("Enter new status (progress/complete): ").strip().lower()
+
+        if new_status not in ["progress", "complete"]:
+            print("\n" + "-" * 70)
+            print("Invalid status.".center(70))
+            print("-" * 70)
+            return
+
+        order_parts[4] = new_status  # Update order_status
+
+        orders[index] = ",".join(order_parts) + "\n"
+
+        with open(ORDERS_FILE, "w") as file:
+            file.writelines(orders)
+
+        print("\n" + "-" * 70)
+        print(f"Order status updated to '{new_status}'.".center(70))
+        chef_menu(username)
+
+    except ValueError:
+        print("\n" + "-" * 70)
+        print("Invalid input.".center(70))
+        print("-" * 70)
+        chef_menu(username)
 
 
 def chef_interface(username):
