@@ -1,5 +1,7 @@
-momo, 100
-chaumin, 200
-burger, 180
-roll,120
-veg-momo,120
+veg momo,veg,plate,120.00
+buff momo,non veg,plate,100.00
+veg burger,veg,pcs,120.00
+mango milkshake,bevevrages,glass,140
+coke,beverages,glass,100.00
+chicken pizza,beverages,plate,280
+chicken pizza,non-veg,plate,280

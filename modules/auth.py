@@ -49,23 +49,33 @@ def login():
                 while attempt > 0:
                     if password == stored_password:
                         if stored_user_role == user_role == "admin":
-                            print(f"{message}")
+                            print("\n" + "-" * 50)
+                            print(f"{message}".center(50).upper())
+                            print("-" * 50)
                             greeting_interface(stored_username)
                             return
                         elif stored_user_role == user_role == "manager":
-                            print(f"{message}")
+                            print("\n" + "-" * 50)
+                            print(f"{message}".center(50).upper())
+                            print("-" * 50)
                             manager_interface(stored_username)
                             return
                         elif stored_user_role == user_role == "chef":
-                            print(f"{message}")
+                            print("\n" + "-" * 50)
+                            print(f"{message}".center(50).upper())
+                            print("-" * 50)
                             chef_interface(stored_username)
                             return
                         elif stored_user_role == user_role == "customer":
-                            print(f"{message}")
+                            print("\n" + "-" * 50)
+                            print(f"{message}".center(50).upper())
+                            print("-" * 50)
                             customer_interface(stored_username)
                             return
                         else:
-                            print("Invalid role.")
+                            print("\n" + "-" * 50)
+                            print("Invalid role.".center(50).upper())
+                            print("-" * 50)
                             return
                     else:
                         attempt -= 1
@@ -77,7 +87,9 @@ def login():
                             reset_password(stored_email)
                 return
 
+    print("\n" + "-" * 50)
     print("Username or email not found.")
+    print("-" * 50)
 
 def reset_password(stored_email):
     reset_status = input("Do you want to reset your password? (y/n): ")

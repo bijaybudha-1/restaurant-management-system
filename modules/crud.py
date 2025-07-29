@@ -3,7 +3,8 @@ import os
 USER_FILE = 'data/users.txt'
 MENU_FILE = 'data/menus.txt'
 
-# Admin Add User
+# =====================  Manger Crud Operation  ====================
+# ========================  Add New Staff  =========================
 def admin_add_user(stored_username):
     from modules.admin import manage_staff
     print("═" * 50)
@@ -23,7 +24,7 @@ def admin_add_user(stored_username):
         with open(USER_FILE, "a") as file:
             file.write(f"{username},{email},{password},{user_role}\n")
             print("\n" + "-" * 50)
-        print("Added new user successfully.")
+        print("Added new user successfully.".center(50))
         print("-" * 50)
     except Exception as error:
         print("\n" + "-" * 50)
@@ -31,7 +32,8 @@ def admin_add_user(stored_username):
         print("-" * 50)
     manage_staff(stored_username)
 
-# View Staff
+
+# =====================  View Staff  ======================
 def view_staff(stored_username):
     from modules.admin import manage_staff, admin_interface
     print("\n" + "═" * 50)
@@ -45,18 +47,31 @@ def view_staff(stored_username):
             print(f"{user_number}. Username: {username}, Email: {email} User Role: {role}")
             user_number += 1
 
-    print("\n" + "═" * 50)
-    print("1. Back to Manage Staff Interface")
-    print("2. Back to Admin Panel")
-    choose_option = int(input("Enter your choice: "))
-    match choose_option:
-        case 1:
-            manage_staff(stored_username)
-        case 2:
-            print("\n" + "═" * 50)
-            admin_interface(stored_username)
+    while True:
+        print("\n" + "═" * 50)
+        print("1. Back to Manage Staff Interface")
+        print("2. Back to Admin Panel")
+        print("═" * 50)
 
-# Update Profile
+        try:
+            choose_option = int(input("Enter your choice: ").strip())
+            match choose_option:
+                case 1:
+                    manage_staff(stored_username)
+                    break
+                case 2:
+                    admin_interface(stored_username)
+                    break
+                case _:
+                    print("\n" + "-" * 50)
+                    print("Invalid option. Please enter 1 or 2.".center(50))
+                    print("-" * 50)
+        except ValueError:
+            print("\n" + "-" * 50)
+            print("Please enter a valid number (1 or 2).".center(50))
+            print("-" * 50)
+
+# =========================  Profile Update  =======================
 def update_profile(verify_username):
     print("\n" + "═" * 50)
     print("UPDATE Profile".center(50))
@@ -96,22 +111,24 @@ def update_profile(verify_username):
             file.writelines(updated_lines)
         print("Profile updated successfully.".capitalize().center(50))
     else:
-        print("Username not found.")
+        print("Username not found.".center(50))
     print("-" * 50)
 
 
-# Update User Profile
+# ==========================  Update Staff Profile  ==========================
 def update_user_profile(stored_username):
     from modules.admin import manage_staff, admin_interface
     print("\n" + "═" * 60)
-    print("USER PROFILE UPDATE".center(60))
+    print("STAFF PROFILE UPDATE".center(60))
     print("═" * 60)
+
     username_to_update = input("Enter the updated username for the staff member: ").strip()
 
     if not os.path.exists(USER_FILE):
-        print("\n" + "-" * 50)
-        print("User file not found.".center(50))
-        print("-" * 50)
+        print("\n" + "-" * 60)
+        print("User file not found.".center(60))
+        print("-" * 60)
+        manage_staff(stored_username)
         return
 
     updated_lines = []
@@ -122,10 +139,19 @@ def update_user_profile(stored_username):
             username, email, password, role = line.strip().split(",")
 
             if username == username_to_update:
-                print("\n" + "-" * 50)
-                print(f"User '{username}' found. Leave blank to keep current value.".center(50))
-                print("─" * 50)
+                # Only allow profile updates for managers or chefs, not admins
+                if role.lower() in ['admin']:
+                    print("\n" + "-" * 60)
+                    print("You cannot update the profile of another admin.".center(60))
+                    print("-" * 60)
+                    manage_staff(stored_username)
+                    return
 
+                print("\n" + "-" * 60)
+                print(f"User '{username}' found. Leave blank to keep current value.".center(60))
+                print("─" * 60)
+
+                # Allow updates to username, email, and role
                 new_username = input(f"Enter your new username: ").strip() or username
                 new_email = input(f"Enter your new email: ").strip() or email
                 new_role = input(f"Enter your new role: ").strip() or role
@@ -136,26 +162,38 @@ def update_user_profile(stored_username):
             else:
                 updated_lines.append(line)
 
-    print("\n" + "-" * 50)
+    print("\n" + "-" * 60)
     if user_found:
         with open(USER_FILE, "w") as file:
             file.writelines(updated_lines)
-        print("Profile updated successfully.".capitalize().center(50))
-        print("-" * 50)
-        print("1. Back to Manage Staff Interface")
-        print("2. Back to Admin Panel")
-        choose_option = int(input("Enter your choice: "))
-        match choose_option:
-            case 1:
-                manage_staff(stored_username)
-            case 2:
-                print("═" * 50)
-                admin_interface(stored_username)
-    else:
-        print("Username not found.")
-    print("-" * 50)
+        print("Profile updated successfully.".capitalize().center(60))
+        print("-" * 60)
 
-# Delete User Profile
+        while True:
+            print("\n" + "═" * 60)
+            print("1. Back to Manage Staff Interface")
+            print("2. Back to Admin Panel")
+            print("═" * 60)
+
+            try:
+                choose_option = int(input("Enter your choice: "))
+                match choose_option:
+                    case 1:
+                        manage_staff(stored_username)
+                        break
+                    case 2:
+                        admin_interface(stored_username)
+                        break
+                    case _:
+                        print("Invalid option. Please enter 1 or 2.".center(60))
+            except ValueError:
+                print("Please enter a valid number (1 or 2).".center(60))
+    else:
+        print("Username not found.".center(60))
+        print("-" * 60)
+        manage_staff(stored_username)
+
+# ==========================  Delete Staff Profile  ==========================
 def delete_user_profile():
     from modules.admin import manage_staff, admin_interface
     print("\n" + "═" * 50)
@@ -188,8 +226,8 @@ def delete_user_profile():
                     file.write(line)
 
         if not user_found:
-            print("-" * 50)
-            print("Username not found.")
+            print("\n" + "-" * 50)
+            print("Username not found.".center(50))
             print("-" * 50)
         elif deleted:
             print("\n" + "-" * 50)
@@ -197,6 +235,9 @@ def delete_user_profile():
             print("-" * 50)
 
         try:
+            print("\n" + "═" * 50)
+            print("1. Back to Manage Staff Interface")
+            print("2. Back to Admin Panel")
             choose_option = int(input("Choice a number 1 or 2: "))
             match choose_option:
                 case 1:
@@ -215,9 +256,9 @@ def delete_user_profile():
         print("Error: User file not found.".center(50))
         print("-" * 50)
 
-# Manager Crud Operation
+# =================== Manager Crud Operation =========================
 
-# View Customer List
+# ===================== View Customer List ===========================
 def view_customer(stored_username):
     from modules.manager import manage_customer, manager_panel
     print("\n" + "═" * 60)
@@ -231,18 +272,29 @@ def view_customer(stored_username):
             print(f"{user_number}. Username: {username}, Email: {email} User Role: {role}")
             user_number += 1
 
-    print("\n" + "═" * 50)
+    print("\n" + "═" * 60)
     print("1. Manage Customer Panel")
     print("2. Back to Manager Main Panel")
-    choose_option = int(input("Enter your choice: "))
-    match choose_option:
-        case 1:
-            manage_customer(stored_username)
-        case 2:
-            print("═" * 50)
-            manager_panel(stored_username)
+    try:
+        choose_option = int(input("Enter your choice: "))
+        match choose_option:
+            case 1:
+                manage_customer(stored_username)
+            case 2:
+                print("═" * 60)
+                manager_panel(stored_username)
+            case _:
+                print("\n" + "-" * 60)
+                print("Invalid option. Please choose between 1 and 2.".center(60))
+                print("-" * 60)
+                manage_customer(stored_username)
+    except ValueError:
+        print("\n" + "-" * 60)
+        print("Please enter a valid number.".center(60))
+        print("-" * 60)
+        manage_customer(stored_username)
 
-# Adding New Customer
+# ===============================  Add New customer  =================================
 def add_customer(stored_username):
     from modules.manager import manage_customer
     print("═" * 50)
@@ -270,7 +322,7 @@ def add_customer(stored_username):
         print("-" * 50)
     manage_customer(stored_username)
 
-# Update Customer Profile
+# =========================  Update Customer Profile  ================================
 def update_customer_profile(stored_username):
     from modules.manager import manage_customer
     import os
@@ -327,7 +379,7 @@ def update_customer_profile(stored_username):
 
     manage_customer(stored_username)
 
-# Delete Customer Profile
+# ===========================  Delete Customer Profile  ===============================
 def delete_customer(stored_username):
     from modules.manager import manage_customer, manager_panel
 
@@ -364,6 +416,7 @@ def delete_customer(stored_username):
             print("\n" + "-" * 50)
             print("Username not found.".center(50))
             print("-" * 50)
+            manage_customer(stored_username)
         elif deleted:
             print("\n" + "-" * 50)
             print(f"User '{removed_username}' has been deleted successfully.".center(50))

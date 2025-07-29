@@ -6,27 +6,43 @@ USER_FILE = 'data/users.txt'
 FEEDBACK_FILE = 'data/feedback.txt'
 
 def manage_staff(username):
-    print("\n" + "═" * 50)
-    print("Manage Staff Interface".center(50))
-    print("═" * 50)
-    print("1. Add New staff")
-    print("2. View All Staff")
-    print("3. Update Staff Profile")
-    print("4. Delete Staff Profile")
-    print("5. Back to Admin Panel")
-    admin_choose = int(input("choose a option: "))
-    match admin_choose:
-        case 1:
-            admin_add_user(username)
-        case 2:
-            view_staff(username)
-        case 3:
-            update_user_profile(username)
-        case 4:
-            delete_user_profile()
-        case 5:
-            print("\n" + "═" * 50)
-            admin_interface(username)
+    while True:
+        print("\n" + "═" * 50)
+        print("Manage Staff Interface".center(50))
+        print("═" * 50)
+        print("1. Add New Staff")
+        print("2. View All Staff")
+        print("3. Update Staff Profile")
+        print("4. Delete Staff Profile")
+        print("5. Back to Admin Panel")
+
+        try:
+            admin_choose = int(input("Choose an option (1–5): ").strip())
+            match admin_choose:
+                case 1:
+                    admin_add_user(username)
+                    break
+                case 2:
+                    view_staff(username)
+                    break
+                case 3:
+                    update_user_profile(username)
+                    break
+                case 4:
+                    delete_user_profile()
+                    break
+                case 5:
+                    print("\n" + "═" * 50)
+                    admin_interface(username)
+                    break
+                case _:
+                    print("\n" + "-" * 50)
+                    print("Please enter a number between 1 and 5.".center(50))
+                    print("-" * 50)
+        except ValueError:
+            print("\n" + "-" * 50)
+            print("Invalid input. Please enter a valid number.".center(50))
+            print("-" * 50)
 
 
 def view_sales_report():
@@ -65,25 +81,46 @@ def greeting_interface(username):
     admin_interface(username)
 
 
+def update_own_profile(username):
+    update_profile(username)
+    admin_interface(username)
+
 def admin_interface(username):
     from modules.auth import auth_interface
-    print("Admin Panel ".center(50))
-    print("═" * 50)
-    print("1. Manage Staff")
-    print("2. View Sales Report")
-    print("3. View Feedback")
-    print("4. Update Profile")
-    print("5. Log out (Exit)")
-    admin_choose = int(input("Choose an option: "))
-    match admin_choose:
-        case 1:
-            manage_staff(username)
-        case 2:
-            view_sales_report()
-        case 3:
-            view_feedback(username)
-        case 4:
-            update_profile(username)
+    while True:
+        print("\n" + "═" * 50)
+        print("Admin Panel".center(50))
+        print("═" * 50)
+        print("1. Manage Staff")
+        print("2. View Sales Report")
+        print("3. View Feedback")
+        print("4. Update Profile")
+        print("5. Log out (Exit)")
+        print("═" * 50)
 
-        case 5:
-            auth_interface()
+        try:
+            admin_choose = int(input("Choose an option (1–5): ").strip())
+            match admin_choose:
+                case 1:
+                    manage_staff(username)
+                    break
+                case 2:
+                    view_sales_report()
+                    break
+                case 3:
+                    view_feedback(username)
+                    break
+                case 4:
+                    update_own_profile(username)
+                    break
+                case 5:
+                    auth_interface()
+                    break
+                case _:
+                    print("-" * 50)
+                    print("Please select a number between 1 and 5.".center(50))
+                    print("-" * 50)
+        except ValueError:
+            print("\n" + "-" * 50)
+            print("Invalid input. Please enter a number.".center(50))
+            print("-" * 50)

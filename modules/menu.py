@@ -24,7 +24,9 @@ def view_menu(username):
         case "y":
             add_order(username)
         case "n":
+            print("\n" + "═" * 60)
             customer_menu(username)
+    print("\n" + "═" * 60)
     customer_menu(username)
 
 def add_order(username):

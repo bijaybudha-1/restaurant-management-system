@@ -15,20 +15,32 @@ def chef_menu(username):
     print("\n" + "═" * 50)
     print("Chef Menu".center(50))
     print("═" * 50)
-    print("1. View Order")
+    print("1. View Orders")
     print("2. Update Orders Status")
     print("3. Update Profile")
     print("4. Logout (Exit)")
-    choose_number = int(input("Enter your choice: "))
-    match choose_number:
-        case 1:
-            print("view Orders")
-        case 2:
-            update_order_status(username)
-        case 3:
-            update_chef_profile(username)
-        case 4:
-            auth_interface()
+
+    try:
+        choose_number = int(input("Enter your choice (1-4): "))
+        match choose_number:
+            case 1:
+                print("Showing Orders...")
+            case 2:
+                update_order_status(username)
+            case 3:
+                update_chef_profile(username)
+            case 4:
+                auth_interface()
+            case _:
+                print("\n" + "-" * 50)
+                print("Please enter a number between 1 and 4.".center(50))
+                print("-" * 50)
+                chef_menu(username)
+    except ValueError:
+        print("\n" + "-" * 50)
+        print("Invalid input. Please enter a number.".center(50))
+        print("-" * 50)
+        chef_menu(username)
 
 def update_order_status(username):
     print("\n" + "═" * 70)
@@ -90,5 +102,6 @@ def update_order_status(username):
 
 
 def chef_interface(username):
+    print("\n" + "═" * 50)
     print(f"{username.capitalize()}, Welcome to the Restaurant Management System!")
     chef_menu(username)
