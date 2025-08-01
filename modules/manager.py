@@ -16,8 +16,9 @@ def manager_panel(username):
     print("═" * 50)
     print("1. Manage Customers")
     print("2. Manage Menu")
-    print("3. Update Profile")
-    print("4. Logout (Exit)")
+    print("3. View Ingredients Requests")
+    print("4. Update Profile")
+    print("5. Logout (Exit)")
 
     try:
         choose_number = int(input("Choose an option (1–4): "))
@@ -27,8 +28,10 @@ def manager_panel(username):
             case 2:
                 manage_menu(username)
             case 3:
-                manager_update_profile(username)
+                view_ingredient_requests(username)
             case 4:
+                manager_update_profile(username)
+            case 5:
                 auth_interface()
             case _:
                 print("\n" + "-" * 50)
@@ -76,6 +79,39 @@ def manage_customer(username):
         print("Invalid input. Please enter a number.".center(50))
         print("-" * 50)
         manage_customer(username)
+
+# ===================  View Ingredient Request  ==========================
+def view_ingredient_requests(username):
+    INGREDIENT_FILE = 'data/ingredients.txt'
+
+    print("\n" + "═" * 90)
+    print("Ingredient Requests from Chefs".center(90))
+    print("═" * 90)
+
+    try:
+        with open(INGREDIENT_FILE, 'r') as file:
+            lines = file.readlines()
+
+        if not lines:
+            print("No ingredient requests found.".center(90))
+            return
+
+        print(f"{'S.N':<5}{'Chef Username':<20}{'Ingredient':<20}{'Qty':<10}{'Unit':<10}{'Note'}")
+        print("-" * 90)
+
+        for i, line in enumerate(lines, start=1):
+            try:
+                chef, name, qty, unit, note = line.strip().split(",", 4)
+                print(f"{i:<5}{chef:<20}{name:<20}{qty:<10}{unit:<10}{note}")
+            except ValueError:
+                print(f"{i:<5} Invalid line format: {line.strip()}")
+
+        print("\n" + "-2" * 90)
+        manager_panel(username)
+
+    except FileNotFoundError:
+        print("Ingredient request file not found.".center(80))
+
 
 # ==================================  Manager Update Own Profile  =========================
 def manager_update_profile(username):
