@@ -144,10 +144,10 @@ def add_ingredient_request(username):
     print("Add Ingredient Request".center(60))
     print("═" * 60)
 
-    name = input("Enter ingredient name: ").strip()
-    quantity = input("Enter quantity: ").strip()
-    unit = input("Enter unit (e.g., kg, liter, packet): ").strip()
-    note = input("Enter note/reason (optional): ").strip()
+    name = input("Enter ingredient name: ").strip().lower()
+    quantity = input("Enter quantity: ").strip().lower()
+    unit = input("Enter unit (e.g., kg, liter, packet): ").strip().lower()
+    note = input("Enter note/reason (optional): ").strip().lower()
 
     if not name or not quantity or not unit:
         print("Ingredient name, quantity, and unit are required.")
@@ -161,12 +161,12 @@ def add_ingredient_request(username):
 
 # ------------------ Edit Ingredient Request ------------------
 def edit_ingredient_request(username):
-
+    view_ingredient_requests(username)
     if not os.path.exists(INGREDIENT_FILE):
         return
 
     try:
-        req_num = int(input("Enter the request number to edit: "))
+        req_num = int(input("Enter the request number to edit: ").lower())
         with open(INGREDIENT_FILE, "r") as file:
             lines = file.readlines()
 
@@ -179,9 +179,9 @@ def edit_ingredient_request(username):
                 count += 1
                 if count == req_num:
                     print(f"Editing Request: {name}")
-                    new_qty = input(f"Enter new quantity (current: {qty}): ").strip() or qty
-                    new_unit = input(f"Enter new unit (current: {unit}): ").strip() or unit
-                    new_note = input(f"Enter new note (current: {note}): ").strip() or note
+                    new_qty = input(f"Enter new quantity (current: {qty}): ").strip().lower() or qty
+                    new_unit = input(f"Enter new unit (current: {unit}): ").strip().lower() or unit
+                    new_note = input(f"Enter new note (current: {note}): ").strip().lower() or note
                     updated_lines.append(f"{user},{name},{new_qty},{new_unit},{new_note}\n")
                     continue
             updated_lines.append(line)
@@ -189,9 +189,14 @@ def edit_ingredient_request(username):
         with open(INGREDIENT_FILE, "w") as file:
             file.writelines(updated_lines)
 
+        print("\n" + "-" * 70)
         print("Ingredient request updated successfully.")
+        print("-" * 70)
+
     except ValueError:
+        print("\n" + "-" * 70)
         print("Invalid input.")
+        print("-" * 70)
 
 # ------------------ Delete Ingredient Request ------------------
 def delete_ingredient_request(username):
@@ -201,7 +206,7 @@ def delete_ingredient_request(username):
         return
 
     try:
-        req_num = int(input("Enter the request number to delete: "))
+        req_num = int(input("Enter the request number to delete: ").lower())
         with open(INGREDIENT_FILE, "r") as file:
             lines = file.readlines()
 
@@ -215,7 +220,9 @@ def delete_ingredient_request(username):
                 count += 1
                 if count == req_num:
                     deleted = True
+                    print("\n" + "-" * 70)
                     print(f"Deleted request for: {name}")
+                    print("-" * 70)
                     continue
             updated_lines.append(line)
 
@@ -223,9 +230,42 @@ def delete_ingredient_request(username):
             file.writelines(updated_lines)
 
         if not deleted:
+            print("\n" + "-" * 70)
             print("Request not found.")
+            print("-" * 70)
     except ValueError:
+        print("\n" + "-" * 70)
         print("Invalid input.")
+        print("-" * 70)
+
+# ------------------ View Ingredient Requests ------------------
+def view_ingredient_requests(username):
+    print("\n" + "═" * 70)
+    print("Your Ingredient Requests".center(70))
+    print("═" * 70)
+
+    if not os.path.exists(INGREDIENT_FILE):
+        print("\n" + "-" * 70)
+        print("No requests found.")
+        print("-" * 70)
+        return
+
+    found = False
+    with open(INGREDIENT_FILE, "r") as file:
+        print("-" * 70)
+        print(f"{'S.N':<5}{'Item Name':<20}{'Qty':<5}{"unit":<5}{'note/reasons':}")
+        print("-" * 70)
+        for i, line in enumerate(file, start=1):
+            user, name, qty, unit, note = line.strip().split(",")
+            if user == username:
+                print(f"{i:<5}{name.title():<15}{qty.title():<20}{unit.title():<5}{note.title()}")
+                found = True
+        print("\n" + "-" * 70)
+
+    if not found:
+        print("\n" + "-" * 70)
+        print("You have no ingredient requests.")
+        print("-" * 70)
 
 # ------------------ Ingredient Request Menu ------------------
 def ingredient_request_menu(username):
