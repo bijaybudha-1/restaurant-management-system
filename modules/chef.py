@@ -5,6 +5,7 @@ from modules.crud import update_profile
 FILE_NAME = 'data/users.txt'
 MENU_FILE = 'data/menu.txt'
 ORDERS_FILE = 'data/orders.txt'
+INGREDIENT_FILE = 'data/ingredients.txt'
 
 def chef_interface(username):
     print("\n" + "═" * 50)
@@ -18,8 +19,9 @@ def chef_menu(username):
     print("═" * 50)
     print("1. View Orders")
     print("2. Update Orders Status")
-    print("3. Update Profile")
-    print("4. Logout (Exit)")
+    print("3. Ingredients Menu")
+    print("4. Update Profile")
+    print("5. Logout (Exit)")
 
     try:
         choose_number = int(input("Enter your choice (1-4): "))
@@ -29,9 +31,11 @@ def chef_menu(username):
             case 2:
                 update_order_status(username)
             case 3:
-                update_chef_profile(username)
+                ingredient_request_menu(username)
             case 4:
-                auth_interface()
+                update_chef_profile(username)
+            case 5:
+                auth_interface(username)
             case _:
                 print("\n" + "-" * 50)
                 print("Please enter a number between 1 and 4.".center(50))
@@ -133,6 +137,123 @@ def update_order_status(username):
         print("Invalid input.".center(70))
         print("-" * 70)
         chef_menu(username)
+
+# ------------------ Add Ingredient Request ------------------
+def add_ingredient_request(username):
+    print("\n" + "═" * 60)
+    print("Add Ingredient Request".center(60))
+    print("═" * 60)
+
+    name = input("Enter ingredient name: ").strip()
+    quantity = input("Enter quantity: ").strip()
+    unit = input("Enter unit (e.g., kg, liter, packet): ").strip()
+    note = input("Enter note/reason (optional): ").strip()
+
+    if not name or not quantity or not unit:
+        print("Ingredient name, quantity, and unit are required.")
+        return
+
+    with open(INGREDIENT_FILE, "a") as file:
+        file.write(f"{username},{name},{quantity},{unit},{note}\n")
+
+    print(f"\nRequest for '{name}' added successfully!")
+
+
+# ------------------ Edit Ingredient Request ------------------
+def edit_ingredient_request(username):
+
+    if not os.path.exists(INGREDIENT_FILE):
+        return
+
+    try:
+        req_num = int(input("Enter the request number to edit: "))
+        with open(INGREDIENT_FILE, "r") as file:
+            lines = file.readlines()
+
+        count = 0
+        updated_lines = []
+
+        for line in lines:
+            user, name, qty, unit, note = line.strip().split(",")
+            if user == username:
+                count += 1
+                if count == req_num:
+                    print(f"Editing Request: {name}")
+                    new_qty = input(f"Enter new quantity (current: {qty}): ").strip() or qty
+                    new_unit = input(f"Enter new unit (current: {unit}): ").strip() or unit
+                    new_note = input(f"Enter new note (current: {note}): ").strip() or note
+                    updated_lines.append(f"{user},{name},{new_qty},{new_unit},{new_note}\n")
+                    continue
+            updated_lines.append(line)
+
+        with open(INGREDIENT_FILE, "w") as file:
+            file.writelines(updated_lines)
+
+        print("Ingredient request updated successfully.")
+    except ValueError:
+        print("Invalid input.")
+
+# ------------------ Delete Ingredient Request ------------------
+def delete_ingredient_request(username):
+    view_ingredient_requests(username)
+
+    if not os.path.exists(INGREDIENT_FILE):
+        return
+
+    try:
+        req_num = int(input("Enter the request number to delete: "))
+        with open(INGREDIENT_FILE, "r") as file:
+            lines = file.readlines()
+
+        count = 0
+        updated_lines = []
+        deleted = False
+
+        for line in lines:
+            user, name, qty, unit, note = line.strip().split(",")
+            if user == username:
+                count += 1
+                if count == req_num:
+                    deleted = True
+                    print(f"Deleted request for: {name}")
+                    continue
+            updated_lines.append(line)
+
+        with open(INGREDIENT_FILE, "w") as file:
+            file.writelines(updated_lines)
+
+        if not deleted:
+            print("Request not found.")
+    except ValueError:
+        print("Invalid input.")
+
+# ------------------ Ingredient Request Menu ------------------
+def ingredient_request_menu(username):
+    while True:
+        print("\n" + "═" * 60)
+        print(f"Chef Menu - Ingredient Request".center(60))
+        print("═" * 60)
+        print("1. Add Ingredient Request")
+        print("2. Edit Request")
+        print("3. Delete Request")
+        print("4. Exit")
+        try:
+            choice = int(input("Enter your choice: "))
+            match choice:
+                case 1:
+                    add_ingredient_request(username)
+                case 2:
+                    edit_ingredient_request(username)
+                case 3:
+                    delete_ingredient_request(username)
+                case 4:
+                    chef_menu(username)
+                    break
+                case _:
+                    print("Invalid choice. Try again.")
+        except ValueError:
+            print("Please enter a valid number.")
+
 
 # ==============================  Update Own Profile  ==================================
 def update_chef_profile(username):
